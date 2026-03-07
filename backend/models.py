@@ -2,9 +2,8 @@
 models.py — Pydantic models for transcript and conversation data
 """
 
-from pydantic import BaseModel
-from typing import Optional
-from pydantic import Field
+from pydantic import BaseModel, Field
+from typing import Dict, List, Optional
 
 class TranscriptChunk(BaseModel):
     speaker: str  # "candidate" or "interviewer"
@@ -73,9 +72,9 @@ class AnalysisInput(BaseModel):
     transcript_chunk: str  # latest candidate answer
     speaker: str  # who said it
     conversation_history: list[dict]  # [{speaker, text}]
-    resume_profile: dict | None = None  # structured resume (skills, projects, experience)
-    resume_context: str | None = None  # retrieved resume context (RAG)
-    conversation_summary: str | None = None  # summary so far
+    resume_profile: Optional[dict] = None  # structured resume (skills, projects, experience)
+    resume_context: Optional[str] = None  # retrieved resume context (RAG)
+    conversation_summary: Optional[str] = None  # summary so far
     session_id: str = ""
 
 
@@ -84,4 +83,4 @@ class AnalysisResult(BaseModel):
     follow_up_questions: list[str] = []
     consistency_flags: list[str] = []
     answer_quality_score: int = 0  # 0-100
-    skill_confidence_updates: dict[str, int] = {}  # skill → confidence 0-100
+    skill_confidence_updates: Dict[str, int] = {}  # skill → confidence 0-100

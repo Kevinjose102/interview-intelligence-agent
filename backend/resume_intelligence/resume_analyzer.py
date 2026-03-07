@@ -14,6 +14,9 @@ import json
 import os
 import re
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from pydantic import BaseModel, Field
 
 

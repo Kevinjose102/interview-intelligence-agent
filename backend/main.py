@@ -7,6 +7,7 @@ import json
 import os
 import tempfile
 import shutil
+from typing import Optional
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Query, UploadFile, File
@@ -155,7 +156,7 @@ async def end_conversation(session_id: str):
 # Summary endpoint (Groq-powered)
 # ------------------------------------------------------------------ #
 
-async def _generate_groq_summary(transcript_text: str) -> str | None:
+async def _generate_groq_summary(transcript_text: str) -> Optional[str]:
     """Use Groq (Llama 3) to generate an intelligent interview summary."""
     api_key = os.getenv("GROQ_API_KEY", "")
     if not api_key or api_key == "your-groq-api-key-here":

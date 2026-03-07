@@ -13,6 +13,7 @@ Uses Groq (Llama 3.3 70B) for fast inference.
 import asyncio
 import json
 import os
+from typing import Dict, Optional
 
 from models import AnalysisInput, AnalysisResult
 
@@ -54,7 +55,7 @@ Return ONLY valid JSON, no markdown, no explanation."""
 
 
 # Store latest analysis per session
-_analysis_cache: dict[str, AnalysisResult] = {}
+_analysis_cache: Dict[str, AnalysisResult] = {}
 
 
 async def analyze(input_data: AnalysisInput) -> AnalysisResult:
@@ -142,11 +143,11 @@ async def analyze(input_data: AnalysisInput) -> AnalysisResult:
         return AnalysisResult()
 
 
-def get_cached_analysis(session_id: str) -> AnalysisResult | None:
+def get_cached_analysis(session_id: str) -> Optional[AnalysisResult]:
     """Return the latest cached analysis for a session."""
     return _analysis_cache.get(session_id)
 
 
-def get_all_analyses() -> dict[str, AnalysisResult]:
+def get_all_analyses() -> Dict[str, AnalysisResult]:
     """Return all cached analyses."""
     return _analysis_cache.copy()

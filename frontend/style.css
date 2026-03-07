@@ -1696,6 +1696,76 @@ body::before {
 .landing-footer a:hover { text-decoration: underline; }
 
 /* ============================================================
+   SKILL CONFIDENCE BARS
+   ============================================================ */
+.skill-confidence-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.skill-conf-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.skill-conf-row:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-4);
+}
+.skill-conf-name {
+  min-width: 140px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.skill-conf-bar-wrap {
+  flex: 1;
+  height: 8px;
+  border-radius: var(--r-full);
+  background: var(--bg-1);
+  overflow: hidden;
+  position: relative;
+}
+.skill-conf-bar-fill {
+  height: 100%;
+  border-radius: var(--r-full);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+.skill-conf-bar-fill.high {
+  background: linear-gradient(90deg, var(--primary), var(--cyan));
+  box-shadow: 0 0 8px rgba(0, 212, 170, 0.3);
+}
+.skill-conf-bar-fill.medium {
+  background: linear-gradient(90deg, var(--amber), #f59e0b);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.2);
+}
+.skill-conf-bar-fill.low {
+  background: linear-gradient(90deg, var(--red), #f87171);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
+}
+.skill-conf-pct {
+  min-width: 42px;
+  text-align: right;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: var(--mono);
+}
+.skill-conf-pct.high { color: var(--primary); }
+.skill-conf-pct.medium { color: var(--amber); }
+.skill-conf-pct.low { color: var(--red); }
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1200px) {

@@ -6,6 +6,7 @@ import {
   uploadResume,
   generateQuestions,
   analyzeConsistency,
+  analyzeLatest,
   subscribeSSE,
   getConversations,
   getConversation,
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initExport();
   initKeyboardShortcuts();
   initSSE();
+  initSkillConfidence();
   loadExistingConversations();
 });
 
@@ -917,4 +919,99 @@ function fmtTime(ts) {
     return `${m}:${String(s).padStart(2, '0')}`;
   }
   return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+/* ================================================================
+   SKILL CONFIDENCE SCORES (from /analyze_latest)
+   ================================================================ */
+function initSkillConfidence() {
+  const btn = document.getElementById('btn-refresh-confidence');
+  if (btn) {
+    btn.addEventListener('click', fetchAndRenderSkillConfidence);
+  }
+}
+
+async function fetchAndRenderSkillConfidence() {
+  const btn = document.getElementById('btn-refresh-confidence');
+  const barsContainer = document.getElementById('skill-confidence-bars');
+  const emptyState = document.getElementById('skill-confidence-empty');
+  const badge = document.getElementById('confidence-skill-count');
+
+  if (!barsContainer) return;
+
+  // Show loading state on button
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+      </svg>
+      Analyzing...
+    `;
+  }
+
+  try {
+    const data = await analyzeLatest();
+
+    if (data.error) {
+      showToast(data.error, 'error');
+      return;
+    }
+
+    const skills = data.analysis?.skill_confidence_updates || {};
+    const entries = Object.entries(skills).sort((a, b) => b[1] - a[1]); // sort by highest confidence
+
+    if (entries.length === 0) {
+      showToast('No skill confidence data returned — start an interview first', 'warning');
+      return;
+    }
+
+    // Update badge
+    if (badge) badge.textContent = entries.length;
+
+    // Build bars
+    barsContainer.innerHTML = entries.map(([skill, score]) => {
+      const level = score >= 70 ? 'high' : score >= 40 ? 'medium' : 'low';
+      return `
+        <div class="skill-conf-row">
+          <span class="skill-conf-name" title="${esc(skill)}">${esc(skill)}</span>
+          <div class="skill-conf-bar-wrap">
+            <div class="skill-conf-bar-fill ${level}" style="width: 0%"></div>
+          </div>
+          <span class="skill-conf-pct ${level}">${score}%</span>
+        </div>
+      `;
+    }).join('');
+
+    // Show bars, hide empty state
+    barsContainer.style.display = 'flex';
+    if (emptyState) emptyState.style.display = 'none';
+
+    // Animate bars after a brief delay
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        barsContainer.querySelectorAll('.skill-conf-bar-fill').forEach((bar, i) => {
+          bar.style.width = `${entries[i][1]}%`;
+        });
+      }, 50);
+    });
+
+    showToast(`Loaded confidence scores for ${entries.length} skills`, 'success');
+
+  } catch (err) {
+    console.error('[skill-confidence] Error:', err);
+    showToast('Failed to fetch skill confidence data', 'error');
+  } finally {
+    // Reset button
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/>
+          <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+        </svg>
+        Refresh from Interview
+      `;
+    }
+  }
 }

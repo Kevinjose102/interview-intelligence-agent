@@ -13,12 +13,13 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 import transcript_handler
 from conversation_manager import manager as conversation_manager
 from models import TranscriptChunk
+from typing import Optional
 
 router = APIRouter()
 
 # Shared session: both speakers tag transcripts with the same ID
 # Audio streams stay completely separate (different Deepgram connections)
-_active_session_id: str | None = None
+_active_session_id: Optional[str] = None
 _active_speaker_count: int = 0
 
 DEEPGRAM_WS_URL = (
