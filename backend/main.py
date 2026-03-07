@@ -322,11 +322,23 @@ async def analyze_latest():
     # If no candidate message, analyze the last message regardless
     target_msg = last_candidate_msg or conv.messages[-1]
 
+    # Load resume profile for consistency checking
+    resume_data = None
+    resume_path = os.path.join(os.path.dirname(__file__), "sample_resume.pdf")
+    if os.path.exists(resume_path):
+        try:
+            from resume_intelligence.pipeline import process_resume
+            profile = await asyncio.to_thread(process_resume, resume_path)
+            resume_data = profile.model_dump()
+            print(f"[analyze_latest] Resume loaded: {len(profile.skills)} skills, {len(profile.projects)} projects")
+        except Exception as e:
+            print(f"[analyze_latest] Resume load error: {e}")
+
     input_data = AnalysisInput(
         transcript_chunk=target_msg.text,
         speaker=target_msg.speaker,
         conversation_history=history,
-        resume_profile=None,  # TODO: integrate with resume intelligence
+        resume_profile=resume_data,
         resume_context=None,
         conversation_summary=None,
         session_id=conv.session_id,
