@@ -175,6 +175,12 @@ async function handleResumeUpload(file) {
     state.resumeProfile = result.profile;
     renderResumeProfile(result.profile);
     updateDashboardResumePreview(result.profile);
+
+    // Render deep analysis if available
+    if (result.deep_analysis) {
+      renderDeepAnalysis(result.deep_analysis);
+    }
+
     showToast('Resume analyzed successfully!', 'success');
 
     // Enable dependent buttons
@@ -251,6 +257,210 @@ function updateDashboardResumePreview(profile) {
     </div>
     <p class="text-sm text-muted">${(profile.projects || []).length} projects · ${(profile.experience || []).length} experience entries</p>
   `;
+}
+
+/* ================================================================
+   DEEP ANALYSIS RENDERING
+   ================================================================ */
+function renderDeepAnalysis(analysis) {
+  if (!analysis) return;
+
+  // Show divider
+  const divider = $('#analysis-divider');
+  if (divider) divider.classList.remove('hidden');
+
+  // ── 1. Overall Quality Score Ring ──
+  const qualityCard = $('#resume-quality-card');
+  const qualityBody = $('#resume-quality-body');
+  if (qualityCard && qualityBody) {
+    const score = analysis.overall_score || 0;
+    const verdict = analysis.overall_verdict || 'Unknown';
+    let color = 'var(--emerald)';
+    if (score < 40) color = 'var(--rose)';
+    else if (score < 70) color = 'var(--amber)';
+
+    const circ = 2 * Math.PI * 42;
+    const offset = circ - (score / 100) * circ;
+
+    qualityBody.innerHTML = `
+      <div class="analysis-score-hero">
+        <div class="score-ring-wrapper">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle class="score-ring-bg" cx="50" cy="50" r="42"/>
+            <circle class="score-ring-fill" cx="50" cy="50" r="42"
+              stroke="${color}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+          </svg>
+          <div class="score-ring-num" style="color:${color}">${score}</div>
+        </div>
+        <div class="analysis-score-info">
+          <div class="analysis-score-verdict" style="color:${color}">${esc(verdict)}</div>
+          <div class="analysis-score-desc">Overall Resume Quality Score</div>
+        </div>
+      </div>`;
+    qualityCard.classList.remove('hidden');
+  }
+
+  // ── 2. Career Trajectory ──
+  const trajCard = $('#resume-trajectory-card');
+  const trajBody = $('#resume-trajectory-body');
+  if (trajCard && trajBody) {
+    const anomalies = analysis.trajectory_anomalies || [];
+    const summary = analysis.trajectory_summary || '';
+    $('#trajectory-count').textContent = anomalies.length;
+
+    if (anomalies.length === 0) {
+      trajBody.innerHTML = `<div class="analysis-ok"><span class="analysis-ok-icon">✓</span> ${esc(summary) || 'No career trajectory anomalies detected.'}</div>`;
+    } else {
+      trajBody.innerHTML = `
+        ${summary ? `<div class="analysis-summary">${esc(summary)}</div>` : ''}
+        <div class="analysis-items">
+          ${anomalies.map((a, i) => `
+            <div class="analysis-item severity-${a.severity || 'medium'}" style="animation-delay:${i * 0.05}s">
+              <div class="analysis-item-header">
+                <span class="severity-badge ${a.severity || 'medium'}">${esc((a.anomaly_type || 'unknown').replace(/_/g, ' '))}</span>
+                ${a.time_period ? `<span class="analysis-time">${esc(a.time_period)}</span>` : ''}
+              </div>
+              <div class="analysis-item-desc">${esc(a.description || '')}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+    trajCard.classList.remove('hidden');
+  }
+
+  // ── 3. Resume Inflation ──
+  const inflCard = $('#resume-inflation-card');
+  const inflBody = $('#resume-inflation-body');
+  if (inflCard && inflBody) {
+    const flags = analysis.inflation_flags || [];
+    const riskLevel = analysis.inflation_risk_level || 'low';
+    const summary = analysis.inflation_summary || '';
+    $('#inflation-count').textContent = flags.length;
+
+    if (flags.length === 0) {
+      inflBody.innerHTML = `<div class="analysis-ok"><span class="analysis-ok-icon">✓</span> ${esc(summary) || 'No resume inflation detected.'}</div>`;
+    } else {
+      inflBody.innerHTML = `
+        <div class="analysis-risk-banner risk-${riskLevel}">
+          <span class="risk-label">Inflation Risk:</span>
+          <span class="risk-level">${esc(riskLevel.toUpperCase())}</span>
+        </div>
+        ${summary ? `<div class="analysis-summary">${esc(summary)}</div>` : ''}
+        <div class="analysis-items">
+          ${flags.map((f, i) => `
+            <div class="analysis-item severity-${f.severity || 'medium'}" style="animation-delay:${i * 0.05}s">
+              <div class="analysis-item-header">
+                <span class="severity-badge ${f.severity || 'medium'}">${esc((f.category || 'unknown').replace(/_/g, ' '))}</span>
+              </div>
+              <div class="analysis-item-claim">"${esc(f.claim || '')}"</div>
+              <div class="analysis-item-desc">${esc(f.reason || '')}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+    inflCard.classList.remove('hidden');
+  }
+
+  // ── 4. Skill Decay ──
+  const decayCard = $('#resume-decay-card');
+  const decayBody = $('#resume-decay-body');
+  if (decayCard && decayBody) {
+    const decayed = analysis.decayed_skills || [];
+    const summary = analysis.decay_summary || '';
+    $('#decay-count').textContent = decayed.length;
+
+    if (decayed.length === 0) {
+      decayBody.innerHTML = `<div class="analysis-ok"><span class="analysis-ok-icon">✓</span> ${esc(summary) || 'All skills appear current.'}</div>`;
+    } else {
+      decayBody.innerHTML = `
+        ${summary ? `<div class="analysis-summary">${esc(summary)}</div>` : ''}
+        <div class="decay-items">
+          ${decayed.map((d, i) => {
+            const riskColor = d.decay_risk === 'high' ? 'var(--rose)' : d.decay_risk === 'medium' ? 'var(--amber)' : 'var(--emerald)';
+            return `
+            <div class="decay-item" style="animation-delay:${i * 0.05}s">
+              <div class="decay-item-top">
+                <span class="decay-skill">${esc(d.skill)}</span>
+                <span class="decay-last-used" style="color:${riskColor}">${esc(d.last_used || 'Unknown')}</span>
+              </div>
+              <div class="decay-bar"><div class="decay-bar-fill" style="background:${riskColor};width:${d.decay_risk === 'high' ? '90%' : d.decay_risk === 'medium' ? '55%' : '25%'}"></div></div>
+              ${d.recommendation ? `<div class="decay-rec">${esc(d.recommendation)}</div>` : ''}
+            </div>`;
+          }).join('')}
+        </div>`;
+    }
+    decayCard.classList.remove('hidden');
+  }
+
+  // ── 5. ATS Compatibility ──
+  const atsCard = $('#resume-ats-card');
+  const atsBody = $('#resume-ats-body');
+  if (atsCard && atsBody) {
+    const ats = analysis.ats || {};
+    const atsScore = ats.score || 0;
+    let atsColor = 'var(--emerald)';
+    if (atsScore < 40) atsColor = 'var(--rose)';
+    else if (atsScore < 70) atsColor = 'var(--amber)';
+
+    const subScores = [
+      { label: 'Section Completeness', value: ats.section_completeness || 0 },
+      { label: 'Keyword Density', value: ats.keyword_density || 0 },
+      { label: 'Formatting', value: ats.formatting_score || 0 },
+      { label: 'Quantified Achievements', value: ats.quantified_achievements || 0 },
+    ];
+
+    atsBody.innerHTML = `
+      <div class="ats-score-header">
+        <div class="ats-score-big" style="color:${atsColor}">${atsScore}<span class="ats-score-unit">/100</span></div>
+        <div class="ats-score-label">ATS Compatibility Score</div>
+      </div>
+      <div class="ats-bars">
+        ${subScores.map((s) => {
+          let barColor = 'var(--emerald)';
+          if (s.value < 40) barColor = 'var(--rose)';
+          else if (s.value < 70) barColor = 'var(--amber)';
+          return `
+          <div class="ats-bar-row">
+            <div class="ats-bar-label">${esc(s.label)}</div>
+            <div class="ats-bar-track"><div class="ats-bar-fill" style="width:${s.value}%;background:${barColor}"></div></div>
+            <div class="ats-bar-value">${s.value}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      ${(ats.issues || []).length ? `
+        <div class="ats-section-label">Issues</div>
+        <div class="ats-list ats-issues">
+          ${ats.issues.map((i) => `<div class="ats-list-item ats-issue">✗ ${esc(i)}</div>`).join('')}
+        </div>` : ''}
+      ${(ats.suggestions || []).length ? `
+        <div class="ats-section-label">Suggestions</div>
+        <div class="ats-list ats-suggestions">
+          ${ats.suggestions.map((s) => `<div class="ats-list-item ats-suggestion">→ ${esc(s)}</div>`).join('')}
+        </div>` : ''}`;
+    atsCard.classList.remove('hidden');
+  }
+
+  // ── 6. Strengths & Weaknesses ──
+  const swCard = $('#resume-sw-card');
+  const swBody = $('#resume-sw-body');
+  if (swCard && swBody) {
+    const strengths = analysis.strengths || [];
+    const weaknesses = analysis.weaknesses || [];
+    if (strengths.length || weaknesses.length) {
+      swBody.innerHTML = `
+        <div class="sw-grid">
+          <div class="sw-col">
+            <div class="sw-col-label" style="color:var(--emerald)">Strengths</div>
+            ${strengths.map((s) => `<div class="sw-item sw-strength"><span class="sw-icon">▲</span> ${esc(s)}</div>`).join('')}
+            ${!strengths.length ? '<div class="text-muted text-sm">None identified</div>' : ''}
+          </div>
+          <div class="sw-col">
+            <div class="sw-col-label" style="color:var(--rose)">Weaknesses</div>
+            ${weaknesses.map((w) => `<div class="sw-item sw-weakness"><span class="sw-icon">▼</span> ${esc(w)}</div>`).join('')}
+            ${!weaknesses.length ? '<div class="text-muted text-sm">None identified</div>' : ''}
+          </div>
+        </div>`;
+      swCard.classList.remove('hidden');
+    }
+  }
 }
 
 /* ================================================================

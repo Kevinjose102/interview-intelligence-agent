@@ -1740,4 +1740,345 @@ body::before {
   .hero-title { font-size: 1.8rem; }
 }
 
+/* ============================================================
+   DEEP ANALYSIS — Resume Analysis Cards
+   ============================================================ */
 
+/* Divider */
+.analysis-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 28px 0 20px;
+  animation: fadeInUp 0.35s ease both;
+}
+.analysis-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  opacity: 0.3;
+}
+.analysis-divider-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+/* Score hero (reused ring pattern) */
+.analysis-score-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 8px 0;
+}
+.analysis-score-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.analysis-score-verdict {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.analysis-score-desc {
+  font-size: 0.82rem;
+  color: var(--text-3);
+}
+
+/* OK state (no issues) */
+.analysis-ok {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--r-sm);
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  font-size: 0.85rem;
+  color: var(--emerald);
+}
+.analysis-ok-icon {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* Summary text */
+.analysis-summary {
+  font-size: 0.85rem;
+  color: var(--text-2);
+  margin-bottom: 14px;
+  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  background: var(--bg-2);
+  border-left: 3px solid var(--primary);
+}
+
+/* Analysis items */
+.analysis-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.analysis-item {
+  padding: 14px 16px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  animation: fadeInUp 0.3s ease both;
+  transition: border-color 0.2s;
+}
+.analysis-item:hover { border-color: var(--border-hover); }
+
+.analysis-item.severity-high { border-left: 3px solid var(--rose); }
+.analysis-item.severity-medium { border-left: 3px solid var(--amber); }
+.analysis-item.severity-low { border-left: 3px solid var(--emerald); }
+
+.analysis-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+/* Severity badges */
+.severity-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: var(--r-full);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.severity-badge.high { background: var(--rose-light); color: var(--rose); }
+.severity-badge.medium { background: var(--amber-light); color: var(--amber); }
+.severity-badge.low { background: var(--emerald-light); color: var(--emerald); }
+
+.analysis-time {
+  font-size: 0.72rem;
+  color: var(--text-3);
+  font-family: var(--mono);
+}
+
+.analysis-item-desc {
+  font-size: 0.82rem;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+.analysis-item-claim {
+  font-size: 0.82rem;
+  color: var(--text-1);
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+/* Risk banner */
+.analysis-risk-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: var(--r-sm);
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.risk-label { color: var(--text-2); }
+.risk-level { font-weight: 800; font-family: var(--mono); letter-spacing: 0.05em; }
+
+.analysis-risk-banner.risk-high {
+  background: var(--rose-light);
+  border: 1px solid rgba(251, 113, 133, 0.2);
+}
+.analysis-risk-banner.risk-high .risk-level { color: var(--rose); }
+
+.analysis-risk-banner.risk-medium {
+  background: var(--amber-light);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+.analysis-risk-banner.risk-medium .risk-level { color: var(--amber); }
+
+.analysis-risk-banner.risk-low {
+  background: var(--emerald-light);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.analysis-risk-banner.risk-low .risk-level { color: var(--emerald); }
+
+/* Decay items */
+.decay-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.decay-item {
+  padding: 12px 16px;
+  border-radius: var(--r-sm);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  animation: fadeInUp 0.3s ease both;
+}
+.decay-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.decay-skill {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.decay-last-used {
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--mono);
+}
+.decay-bar {
+  height: 4px;
+  border-radius: var(--r-full);
+  background: var(--bg-3);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.decay-bar-fill {
+  height: 100%;
+  border-radius: var(--r-full);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.decay-rec {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  font-style: italic;
+}
+
+/* ATS Compatibility */
+.ats-score-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.ats-score-big {
+  font-size: 2.8rem;
+  font-weight: 900;
+  font-family: var(--mono);
+  line-height: 1;
+}
+.ats-score-unit {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-3);
+}
+.ats-score-label {
+  font-size: 0.78rem;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+
+.ats-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.ats-bar-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 36px;
+  align-items: center;
+  gap: 12px;
+}
+.ats-bar-label {
+  font-size: 0.78rem;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.ats-bar-track {
+  height: 6px;
+  border-radius: var(--r-full);
+  background: var(--bg-3);
+  overflow: hidden;
+}
+.ats-bar-fill {
+  height: 100%;
+  border-radius: var(--r-full);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ats-bar-value {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-1);
+  font-family: var(--mono);
+  text-align: right;
+}
+
+.ats-section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  margin: 14px 0 8px;
+}
+.ats-list { display: flex; flex-direction: column; gap: 4px; }
+.ats-list-item {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: var(--r-sm);
+  line-height: 1.4;
+}
+.ats-issue {
+  background: var(--rose-light);
+  color: var(--rose);
+  border: 1px solid rgba(251, 113, 133, 0.1);
+}
+.ats-suggestion {
+  background: var(--blue-light);
+  color: var(--blue);
+  border: 1px solid rgba(56, 189, 248, 0.1);
+}
+
+/* Strengths & Weaknesses */
+.sw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.sw-col-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.sw-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.sw-icon { font-size: 0.7rem; flex-shrink: 0; margin-top: 2px; }
+.sw-strength {
+  background: rgba(16, 185, 129, 0.06);
+  color: var(--emerald);
+  border: 1px solid rgba(16, 185, 129, 0.1);
+}
+.sw-weakness {
+  background: var(--rose-light);
+  color: var(--rose);
+  border: 1px solid rgba(251, 113, 133, 0.1);
+}
+
+@media (max-width: 768px) {
+  .analysis-score-hero { flex-direction: column; text-align: center; }
+  .ats-bar-row { grid-template-columns: 100px 1fr 30px; }
+  .sw-grid { grid-template-columns: 1fr; }
+}
