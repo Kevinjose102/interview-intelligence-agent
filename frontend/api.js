@@ -74,8 +74,3 @@ export function subscribeSSE(onMessage) {
   };
   return source;
 }
-
-export async function analyzeLatest() {
-  const res = await fetch(`${BASE}/analyze_latest`);
-  return res.json();
-}

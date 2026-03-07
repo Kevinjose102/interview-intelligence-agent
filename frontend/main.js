@@ -40,11 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initSSE();
   initSkillConfidence();
   loadExistingConversations();
-<<<<<<< HEAD
   initHealthCheck();
-=======
   startAnalyzeLatestPolling();
->>>>>>> 279ad37af3616e36f1cc73b5ded52f8e4af88138
 });
 
 /* ================================================================
@@ -381,8 +378,8 @@ function renderDeepAnalysis(analysis) {
         ${summary ? `<div class="analysis-summary">${esc(summary)}</div>` : ''}
         <div class="decay-items">
           ${decayed.map((d, i) => {
-            const riskColor = d.decay_risk === 'high' ? 'var(--rose)' : d.decay_risk === 'medium' ? 'var(--amber)' : 'var(--emerald)';
-            return `
+        const riskColor = d.decay_risk === 'high' ? 'var(--rose)' : d.decay_risk === 'medium' ? 'var(--amber)' : 'var(--emerald)';
+        return `
             <div class="decay-item" style="animation-delay:${i * 0.05}s">
               <div class="decay-item-top">
                 <span class="decay-skill">${esc(d.skill)}</span>
@@ -391,7 +388,7 @@ function renderDeepAnalysis(analysis) {
               <div class="decay-bar"><div class="decay-bar-fill" style="background:${riskColor};width:${d.decay_risk === 'high' ? '90%' : d.decay_risk === 'medium' ? '55%' : '25%'}"></div></div>
               ${d.recommendation ? `<div class="decay-rec">${esc(d.recommendation)}</div>` : ''}
             </div>`;
-          }).join('')}
+      }).join('')}
         </div>`;
     }
     decayCard.classList.remove('hidden');
@@ -421,16 +418,16 @@ function renderDeepAnalysis(analysis) {
       </div>
       <div class="ats-bars">
         ${subScores.map((s) => {
-          let barColor = 'var(--emerald)';
-          if (s.value < 40) barColor = 'var(--rose)';
-          else if (s.value < 70) barColor = 'var(--amber)';
-          return `
+      let barColor = 'var(--emerald)';
+      if (s.value < 40) barColor = 'var(--rose)';
+      else if (s.value < 70) barColor = 'var(--amber)';
+      return `
           <div class="ats-bar-row">
             <div class="ats-bar-label">${esc(s.label)}</div>
             <div class="ats-bar-track"><div class="ats-bar-fill" style="width:${s.value}%;background:${barColor}"></div></div>
             <div class="ats-bar-value">${s.value}</div>
           </div>`;
-        }).join('')}
+    }).join('')}
       </div>
       ${(ats.issues || []).length ? `
         <div class="ats-section-label">Issues</div>
