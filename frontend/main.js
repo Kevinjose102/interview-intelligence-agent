@@ -12,6 +12,7 @@ import {
   getConversation,
   getResumeHistory,
   deleteResumeRecord,
+  generateResumeSummary,
 } from './api.js';
 
 /* ──────── STATE ──────── */
@@ -535,15 +536,15 @@ function renderResumeHistory(records) {
           <div class="rh-card-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           </div>
-          <div class="rh-card-info">
-            <div class="rh-card-name">${esc(r.filename)}</div>
-            <div class="rh-card-meta">${date}</div>
-          </div>
-          <div class="rh-card-stats">
-            <span class="rh-stat" title="Skills">${skillCount} skills</span>
-            <span class="rh-stat" title="Projects">${projectCount} projects</span>
-            <span class="rh-stat rh-score" style="color:${scoreColor}" title="Quality Score">${score}${typeof score === 'number' ? '/100' : ''}</span>
-          </div>
+          <span class="rh-card-name">${esc(r.filename)}</span>
+          <span class="rh-card-meta">${date}</span>
+          <button class="rh-summary-btn" data-summary-id="${r.id}" title="Generate Summary">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Generate Summary
+          </button>
+          <span class="rh-stat" title="Skills">${skillCount} skills</span>
+          <span class="rh-stat" title="Projects">${projectCount} projects</span>
+          <span class="rh-stat rh-score" style="color:${scoreColor}" title="Quality Score">${score}${typeof score === 'number' ? '/100' : ''}</span>
           <button class="rh-delete-btn" data-delete-id="${r.id}" title="Delete">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           </button>
@@ -576,6 +577,16 @@ function renderResumeHistory(records) {
       }
     });
   });
+
+  // Summary button handlers
+  list.querySelectorAll('.rh-summary-btn').forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.summaryId;
+      const record = records.find((r) => r.id === id);
+      if (record) handleGenerateSummary(record, btn);
+    });
+  });
 }
 
 function restoreResumeFromHistory(record, cardEl) {
@@ -602,6 +613,51 @@ function restoreResumeFromHistory(record, cardEl) {
 
   showToast(`Loaded: ${record.filename}`, 'success');
 }
+
+async function handleGenerateSummary(record, btn) {
+  // Build transcript text from state
+  const transcriptText = state.transcriptMessages
+    .map((m) => `${m.speaker || 'Unknown'}: ${m.text}`)
+    .join('\n');
+
+  // Show modal with loading state
+  const modal = $('#summary-modal');
+  const body = $('#summary-modal-body');
+  const title = $('#summary-modal-title');
+  title.textContent = `Summary — ${record.filename}`;
+  body.innerHTML = `
+    <div class="summary-loading">
+      <div class="loading-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
+      <p class="text-muted">Generating summary with AI...</p>
+    </div>`;
+  modal.classList.remove('summary-hidden');
+
+  // Disable button while loading
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+
+  try {
+    const result = await generateResumeSummary(
+      record.profile,
+      record.deep_analysis,
+      transcriptText
+    );
+    if (result.error) throw new Error(result.error);
+
+    // Render summary with basic markdown-like bold formatting
+    const formatted = result.summary
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
+    body.innerHTML = `<div class="summary-content">${formatted}</div>`;
+  } catch (err) {
+    body.innerHTML = `<div class="summary-error"><p>Failed to generate summary</p><p class="text-muted text-sm">${esc(err.message)}</p></div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Generate Summary`;
+  }
+}
+
+
 
 /* ================================================================
    BUTTONS

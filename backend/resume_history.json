@@ -95,124 +95,6 @@
     }
   },
   {
-    "id": "17b5f6ea-3ca8-4f93-b937-cb73a11a51de",
-    "filename": "KEVIN JOSE RESUME.pdf",
-    "uploaded_at": "2026-03-07T16:49:56.105011+00:00",
-    "profile": {
-      "skills": [
-        "C",
-        "Java",
-        "Python",
-        "HTML",
-        "CSS",
-        "JavaScript",
-        "MySQL",
-        "Oracle SQL",
-        "Git",
-        "GitHub",
-        "VS code",
-        "Android Studio"
-      ],
-      "projects": [
-        {
-          "name": "PocketCluster: Distributed Storage System Using Old Smartphones",
-          "technologies": [
-            "Distributed storage",
-            "File chunking",
-            "Replication",
-            "Zero Trust principles",
-            "Authentication",
-            "Authorization"
-          ],
-          "description": "Built a distributed storage system using old smartphones as low-cost storage nodes. Implemented file chunking and replication for fault tolerance and reliability. Designed a central controller for metadata indexing, upload/download coordination, and node management."
-        },
-        {
-          "name": "RAG-Powered Medical Agent (Hybrid Memory & Triage System)",
-          "technologies": [
-            "RAG",
-            "Semantic retrieval",
-            "Embeddings",
-            "Pinecone vector database",
-            "Speech processing",
-            "Emotion-aware interaction"
-          ],
-          "description": "Built a medical conversational agent using RAG with short-term and long-term memory. Implemented semantic retrieval using embeddings and Pinecone vector database. Integrated speech processing and emotion-aware interaction, contributing to the emotion recognition model pipeline."
-        },
-        {
-          "name": "Multi-Modal Image Recognition System",
-          "technologies": [
-            "OpenCV",
-            "Kivy",
-            "GUI-based computer vision"
-          ],
-          "description": "Built a GUI-based computer vision system supporting object, face, and text recognition with real-time on-device inference. Integrated OpenCV pipelines with a lightweight Kivy interface; secured 2nd place in a hackathon for practical innovation."
-        },
-        {
-          "name": "Smart Power Monitoring System",
-          "technologies": [
-            "ESP32",
-            "Flask",
-            "MySQL",
-            "REST APIs",
-            "Flutter"
-          ],
-          "description": "Built a real-time IoT-based energy monitoring system using ESP32 to collect voltage and current data and transmit it to a local Flask server. Developed REST APIs and designed a MySQL database to store and process time-series energy data with peak usage tracking."
-        }
-      ],
-      "experience": []
-    },
-    "deep_analysis": {
-      "overall_score": 82,
-      "overall_verdict": "Strong",
-      "trajectory_anomalies": [],
-      "trajectory_summary": "No anomalies detected in career trajectory.",
-      "inflation_flags": [
-        {
-          "claim": "Built a distributed storage system using old smartphones as low-cost storage nodes.",
-          "reason": "Lack of specific metrics or details.",
-          "severity": "low",
-          "category": "vague_quantification"
-        }
-      ],
-      "inflation_risk_level": "low",
-      "inflation_summary": "Some claims lack specific metrics or details, but overall the resume appears to be free of major inflation.",
-      "decayed_skills": [
-        {
-          "skill": "Oracle SQL",
-          "last_used": "Not specified",
-          "decay_risk": "medium",
-          "recommendation": "Provide recent examples or certifications to demonstrate ongoing proficiency."
-        }
-      ],
-      "decay_summary": "Some skills, such as Oracle SQL, are not clearly demonstrated to be recently used and may be at risk of decay.",
-      "ats": {
-        "score": 90,
-        "section_completeness": 95,
-        "keyword_density": 85,
-        "formatting_score": 95,
-        "quantified_achievements": 80,
-        "issues": [
-          "Lack of clear sectioning in some areas.",
-          "Some achievements could be more quantified."
-        ],
-        "suggestions": [
-          "Use clear headings and sectioning to improve readability.",
-          "Add specific numbers and metrics to achievements where possible."
-        ]
-      },
-      "strengths": [
-        "Strong project experience",
-        "Variety of technical skills",
-        "Clear career goals"
-      ],
-      "weaknesses": [
-        "Could improve quantification of achievements",
-        "Some skills may be at risk of decay without recent examples",
-        "Minor formatting issues"
-      ]
-    }
-  },
-  {
     "id": "62db0a9f-e33a-4775-8b62-6120ecff3486",
     "filename": "AlenSajiSkariahResume.pdf",
     "uploaded_at": "2026-03-07T16:56:37.583438+00:00",
@@ -327,6 +209,671 @@
         "lack of specific details on some projects or accomplishments",
         "short tenure in some roles",
         "limited evidence of soft skills or non-technical abilities"
+      ]
+    }
+  },
+  {
+    "id": "1ab86bf0-31d7-4d81-9298-db8603c0d390",
+    "filename": "KEVIN JOSE RESUME.pdf",
+    "uploaded_at": "2026-03-07T17:37:10.120543+00:00",
+    "profile": {
+      "skills": [
+        "C",
+        "Java",
+        "Python",
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "MySQL",
+        "Oracle SQL",
+        "Git",
+        "GitHub",
+        "VS code",
+        "Android Studio",
+        "Problem-solving",
+        "Debugging",
+        "Project-based development"
+      ],
+      "projects": [
+        {
+          "name": "PocketCluster: Distributed Storage System Using Old Smartphones",
+          "technologies": [
+            "Distributed Storage",
+            "File Chunking",
+            "Replication",
+            "Zero Trust"
+          ],
+          "description": "Built a distributed storage system using old smartphones as low-cost storage nodes. Implemented file chunking and replication for fault tolerance and reliability."
+        },
+        {
+          "name": "RAG-Powered Medical Agent (Hybrid Memory & Triage System)",
+          "technologies": [
+            "RAG",
+            "Semantic Retrieval",
+            "Emotion Recognition"
+          ],
+          "description": "Built a medical conversational agent using RAG with short-term and long-term memory. Implemented semantic retrieval using embeddings and Pinecone vector database."
+        },
+        {
+          "name": "Multi-Modal Image Recognition System",
+          "technologies": [
+            "OpenCV",
+            "Kivy",
+            "Computer Vision"
+          ],
+          "description": "Built a GUI-based computer vision system supporting object, face, and text recognition with real-time on-device inference."
+        },
+        {
+          "name": "Smart Power Monitoring System",
+          "technologies": [
+            "ESP32",
+            "Flask",
+            "MySQL",
+            "Flutter"
+          ],
+          "description": "Built a real-time IoT-based energy monitoring system using ESP32 to collect voltage and current data and transmit it to a local Flask server."
+        }
+      ],
+      "experience": []
+    },
+    "deep_analysis": {
+      "overall_score": 82,
+      "overall_verdict": "Strong",
+      "trajectory_anomalies": [
+        {
+          "anomaly_type": "gap",
+          "description": "No work experience listed",
+          "severity": "medium",
+          "time_period": "entire resume"
+        }
+      ],
+      "trajectory_summary": "The candidate has no work experience listed, but has a strong educational background and project experience. There are no demotions, short tenures, or career pivots to report.",
+      "inflation_flags": [
+        {
+          "claim": "Built a distributed storage system using old smartphones as low-cost storage nodes",
+          "reason": "Lack of specific details on implementation",
+          "severity": "low",
+          "category": "buzzword_stuffing"
+        }
+      ],
+      "inflation_risk_level": "low",
+      "inflation_summary": "The candidate's claims seem reasonable, but some descriptions lack specific details, which may indicate minor buzzword stuffing.",
+      "decayed_skills": [
+        {
+          "skill": "Oracle SQL",
+          "last_used": "Not specified",
+          "decay_risk": "medium",
+          "recommendation": "Provide recent projects or certifications to demonstrate proficiency"
+        }
+      ],
+      "decay_summary": "The candidate lists Oracle SQL as a skill, but there is no evidence of recent usage, which may indicate a medium risk of skill decay.",
+      "ats": {
+        "score": 90,
+        "section_completeness": 95,
+        "keyword_density": 85,
+        "formatting_score": 95,
+        "quantified_achievements": 80,
+        "issues": [
+          "Lack of specific company names",
+          "No clear career progression"
+        ],
+        "suggestions": [
+          "Add specific company names and descriptions",
+          "Emphasize career progression and achievements"
+        ]
+      },
+      "strengths": [
+        "Strong project experience",
+        "Good educational background",
+        "Proficient in multiple programming languages"
+      ],
+      "weaknesses": [
+        "Lack of work experience",
+        "No clear career progression",
+        "Some skills may be at risk of decay"
+      ]
+    }
+  },
+  {
+    "id": "5da041e9-d0b3-4d72-9057-b215eb7e2943",
+    "filename": "AlenSajiSkariahResume.pdf",
+    "uploaded_at": "2026-03-07T17:38:37.526188+00:00",
+    "profile": {
+      "skills": [
+        "Python",
+        "MySQL",
+        "CHTML",
+        "CSS",
+        "Git",
+        "GitHub",
+        "Visual Studio Code"
+      ],
+      "projects": [
+        {
+          "name": "Train Ticket Booking System",
+          "technologies": [
+            "Python",
+            "MySQL"
+          ],
+          "description": "Built a Python–MySQL based Train Ticket Booking System with an intuitive interface for booking, cancellation, and ticket management. Ensured fast and accurate ticket booking and cancellation with minimal user effort. Improved data reliability through structured MySQL database design and validation. Reduced manual errors by automating ticket and schedule management."
+        },
+        {
+          "name": "Real-Time AI Hallucination Detection System",
+          "technologies": [
+            "Python"
+          ],
+          "description": "Developing a Real-Time Hallucination Detection System to identify inaccurate or misleading AI-generated content. The project focuses on improving response reliability through model fine-tuning and optimized context generation. Successfully fine-tuned the base model to improve factual consistency. Resolved context generation issues to produce more relevant and coherent responses."
+        }
+      ],
+      "experience": [
+        "at Innovature Labs — Focus on full-stack development using Python and React with industry-standard practices. The internship emphasizes REST APIs, authentication, database management, and deployment.",
+        "at Stybay — Built an optimized web scraper to extract product details from Myntra, Ajio, and Flipkart using Python, Selenium, and BeautifulSoup. Developed RESTful APIs with Flask to connect frontend with backend for search. Added anti-blocking, error handling, and testing, ensuring reliable and scalable data extraction.",
+        "at Digital University Kerala — Developed a Python-based Active Directory security analyzer with IP and Privilege Analysis modules to identify risky logins and privilege misuse. Built an IP Analyzer using Windows Event Logs, RDP session data, and netstat to map user login locations and detect suspicious access. Designed risk classification logic to categorize AD accounts based on group memberships and security flags for access control auditing. Used BloodHound, PingCastle, ldap3, and pywinrm to analyze attack paths, assess domain health, and automate AD data collection."
+      ]
+    },
+    "deep_analysis": {
+      "overall_score": 82,
+      "overall_verdict": "Strong",
+      "trajectory_anomalies": [
+        {
+          "anomaly_type": "short_tenure",
+          "description": "Internship at Digital University Kerala lasted only 1 month",
+          "severity": "medium",
+          "time_period": "05/2025 - 06/2025"
+        }
+      ],
+      "trajectory_summary": "The candidate's career trajectory appears to be progressing normally, with a minor anomaly in the short tenure at Digital University Kerala. The candidate has been consistently gaining experience in the field, with a focus on software development and cybersecurity.",
+      "inflation_flags": [
+        {
+          "claim": "Developing a Real-Time Hallucination Detection System",
+          "reason": "Lack of concrete details",
+          "severity": "low",
+          "category": "vague_quantification"
+        },
+        {
+          "claim": "Built an optimized web scraper to extract product details from Myntra, Ajio, and Flipkart",
+          "reason": "Excessive use of buzzwords",
+          "severity": "low",
+          "category": "buzzword_stuffing"
+        }
+      ],
+      "inflation_risk_level": "low",
+      "inflation_summary": "The candidate's resume appears to be free of major inflation flags, with only minor instances of vague quantification and buzzword stuffing.",
+      "decayed_skills": [
+        {
+          "skill": "MySQL",
+          "last_used": "2022",
+          "decay_risk": "medium",
+          "recommendation": "Update resume to include recent projects or experiences that utilize MySQL"
+        }
+      ],
+      "decay_summary": "The candidate's skill in MySQL appears to be at risk of decay, as it has not been mentioned in recent roles or projects. It is recommended that the candidate updates their resume to include recent experiences that utilize MySQL.",
+      "ats": {
+        "score": 90,
+        "section_completeness": 95,
+        "keyword_density": 85,
+        "formatting_score": 90,
+        "quantified_achievements": 80,
+        "issues": [
+          "Lack of concrete numbers in achievements",
+          "Some sections could be more concise"
+        ],
+        "suggestions": [
+          "Use specific numbers to quantify achievements",
+          "Consider condensing certain sections to improve readability"
+        ]
+      },
+      "strengths": [
+        "Strong technical skills",
+        "Variety of experiences in software development and cybersecurity",
+        "Clear and concise writing style"
+      ],
+      "weaknesses": [
+        "Lack of concrete numbers in achievements",
+        "Some sections could be more concise",
+        "Limited evidence of recent usage of certain skills"
+      ]
+    }
+  },
+  {
+    "id": "d1a922ec-1bd6-47d1-a384-4a922c5a2def",
+    "filename": "KEVIN JOSE RESUME.pdf",
+    "uploaded_at": "2026-03-07T17:46:17.701444+00:00",
+    "profile": {
+      "skills": [
+        "C",
+        "Java",
+        "Python",
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "MySQL",
+        "Oracle SQL",
+        "Git",
+        "GitHub",
+        "VS code",
+        "Android Studio"
+      ],
+      "projects": [
+        {
+          "name": "PocketCluster: Distributed Storage System Using Old Smartphones",
+          "technologies": [
+            "Distributed storage",
+            "File chunking",
+            "Replication",
+            "Zero Trust principles",
+            "Authentication",
+            "Authorization"
+          ],
+          "description": "Built a distributed storage system using old smartphones as low-cost storage nodes. Implemented file chunking and replication for fault tolerance and reliability. Designed a central controller for metadata indexing, upload/download coordination, and node management. Applied Zero Trust principles with authentication and authorization for all nodes and requests. Focused on scalability, decentralized storage, and efficient resource utilization."
+        },
+        {
+          "name": "RAG-Powered Medical Agent (Hybrid Memory & Triage System)",
+          "technologies": [
+            "RAG",
+            "Semantic retrieval",
+            "Embeddings",
+            "Pinecone vector database",
+            "Speech processing",
+            "Emotion-aware interaction"
+          ],
+          "description": "Built a medical conversational agent using RAG with short-term and long-term memory. Implemented semantic retrieval using embeddings and Pinecone vector database. Integrated speech processing and emotion-aware interaction, contributing to the emotion recognition model pipeline."
+        },
+        {
+          "name": "Multi-Modal Image Recognition System",
+          "technologies": [
+            "OpenCV",
+            "Kivy",
+            "GUI-based computer vision"
+          ],
+          "description": "Built a GUI-based computer vision system supporting object, face, and text recognition with real-time on-device inference. Integrated OpenCV pipelines with a lightweight Kivy interface; secured 2nd place in a hackathon for practical innovation."
+        },
+        {
+          "name": "Smart Power Monitoring System",
+          "technologies": [
+            "ESP32",
+            "Flask",
+            "MySQL",
+            "REST APIs",
+            "Flutter"
+          ],
+          "description": "Built a real-time IoT-based energy monitoring system using ESP32 to collect voltage and current data and transmit it to a local Flask server. Developed REST APIs and designed a MySQL database to store and process time-series energy data with peak usage tracking. Created a Flutter app for live visualization, historical usage analysis, and bill estimation based on KSEB tariff rates."
+        }
+      ],
+      "experience": [
+        "— Seeking an internship or entry-level role where I can contribute to production-grade systems while continuing to grow as an engineer."
+      ]
+    },
+    "deep_analysis": {
+      "overall_score": 82,
+      "overall_verdict": "Strong",
+      "trajectory_anomalies": [
+        {
+          "anomaly_type": "gap",
+          "description": "No work experience mentioned",
+          "severity": "low",
+          "time_period": "entire resume"
+        }
+      ],
+      "trajectory_summary": "The candidate has no noticeable career trajectory anomalies, but lacks work experience. The resume focuses on academic projects and skills.",
+      "inflation_flags": [
+        {
+          "claim": "Built a distributed storage system using old smartphones as low-cost storage nodes",
+          "reason": "Lack of specific metrics or impact",
+          "severity": "low",
+          "category": "vague_quantification"
+        },
+        {
+          "claim": "Contributed to the emotion recognition model pipeline",
+          "reason": "Unclear scope of contribution",
+          "severity": "low",
+          "category": "vague_quantification"
+        }
+      ],
+      "inflation_risk_level": "low",
+      "inflation_summary": "The candidate's resume has some minor inflation flags, primarily due to vague quantifications, but overall appears to be honest and accurate.",
+      "decayed_skills": [
+        {
+          "skill": "Oracle SQL",
+          "last_used": "Not mentioned",
+          "decay_risk": "medium",
+          "recommendation": "Consider removing or updating this skill"
+        }
+      ],
+      "decay_summary": "The candidate's skills appear to be mostly up-to-date, but Oracle SQL is not mentioned as a recently used skill and may be at risk of decay.",
+      "ats": {
+        "score": 90,
+        "section_completeness": 95,
+        "keyword_density": 85,
+        "formatting_score": 95,
+        "quantified_achievements": 80,
+        "issues": [
+          "Lack of specific company or work experience mentions"
+        ],
+        "suggestions": [
+          "Add more specific metrics or achievements to project descriptions",
+          "Consider including relevant coursework or academic projects"
+        ]
+      },
+      "strengths": [
+        "Strong technical skills",
+        "Variety of projects and experiences",
+        "Clear and concise writing style"
+      ],
+      "weaknesses": [
+        "Lack of work experience",
+        "Some vague quantifications",
+        "Limited context for projects and skills"
+      ]
+    }
+  },
+  {
+    "id": "e1b65a49-9a02-444c-b985-9d571d84be7d",
+    "filename": "AlenSajiSkariahResume.pdf",
+    "uploaded_at": "2026-03-07T17:49:45.040505+00:00",
+    "profile": {
+      "skills": [
+        "Python",
+        "MySQL",
+        "CHTML",
+        "CSS",
+        "Git",
+        "GitHub",
+        "Visual Studio Code"
+      ],
+      "projects": [
+        {
+          "name": "Train Ticket Booking System",
+          "technologies": [
+            "Python",
+            "MySQL"
+          ],
+          "description": "Built a Python–MySQL based Train Ticket Booking System with an intuitive interface for booking, cancellation, and ticket management. Ensured fast and accurate ticket booking and cancellation with minimal user effort. Improved data reliability through structured MySQL database design and validation. Reduced manual errors by automating ticket and schedule management."
+        },
+        {
+          "name": "Real-Time AI Hallucination Detection System",
+          "technologies": [
+            "Python"
+          ],
+          "description": "Developing a Real-Time Hallucination Detection System to identify inaccurate or misleading AI-generated content. The project focuses on improving response reliability through model fine-tuning and optimized context generation. Successfully fine-tuned the base model to improve factual consistency. Resolved context generation issues to produce more relevant and coherent responses."
+        }
+      ],
+      "experience": [
+        "(01/2026 - Present) — Focus on full-stack development using Python and React with industry-standard practices. The internship emphasizes REST APIs, authentication, database management, and deployment.",
+        "(06/2025 - Present) — Built an optimized web scraper to extract product details from Myntra, Ajio, and Flipkart using Python, Selenium, and BeautifulSoup. Developed RESTful APIs with Flask to connect frontend with backend for search. Added anti-blocking, error handling, and testing, ensuring reliable and scalable data extraction.",
+        "(05/2025 - 06/2025) — Developed a Python-based Active Directory security analyzer with IP and Privilege Analysis modules to identify risky logins and privilege misuse. Built an IP Analyzer using Windows Event Logs, RDP session data, and netstat to map user login locations and detect suspicious access. Designed risk classification logic to categorize AD accounts based on group memberships and security flags for access control auditing. Used BloodHound, PingCastle, ldap3, and pywinrm to analyze attack paths, assess domain health, and automate AD data collection."
+      ]
+    },
+    "deep_analysis": {
+      "overall_score": 82,
+      "overall_verdict": "Strong",
+      "trajectory_anomalies": [
+        {
+          "anomaly_type": "short_tenure",
+          "description": "Internship at Digital University Kerala lasted only 1 month",
+          "severity": "low",
+          "time_period": "05/2025 - 06/2025"
+        }
+      ],
+      "trajectory_summary": "The candidate's career trajectory appears to be progressing normally, with a short internship at Digital University Kerala being the only notable anomaly. The candidate has been consistently gaining experience in the field of software development and cybersecurity.",
+      "inflation_flags": [
+        {
+          "claim": "Developing a Real-Time Hallucination Detection System",
+          "reason": "Lack of specific details about the project",
+          "severity": "low",
+          "category": "vague_quantification"
+        },
+        {
+          "claim": "Built an optimized web scraper to extract product details from Myntra, Ajio, and Flipkart",
+          "reason": "Excessive use of buzzwords",
+          "severity": "low",
+          "category": "buzzword_stuffing"
+        }
+      ],
+      "inflation_risk_level": "low",
+      "inflation_summary": "The candidate's resume appears to be mostly free of inflation, with only a few instances of vague quantifications and buzzword stuffing. However, the candidate could benefit from providing more specific details about their projects and experiences.",
+      "decayed_skills": [
+        {
+          "skill": "MySQL",
+          "last_used": "2022",
+          "decay_risk": "medium",
+          "recommendation": "Update the resume to include more recent experiences with MySQL or take a course to refresh skills"
+        }
+      ],
+      "decay_summary": "The candidate's skills in MySQL appear to be at risk of decay, as the last mention of the skill was in 2022. The candidate should consider updating their resume to include more recent experiences with MySQL or taking a course to refresh their skills.",
+      "ats": {
+        "score": 90,
+        "section_completeness": 95,
+        "keyword_density": 85,
+        "formatting_score": 90,
+        "quantified_achievements": 80,
+        "issues": [
+          "Lack of specific numbers and metrics in achievements",
+          "Some sections could be formatted more clearly"
+        ],
+        "suggestions": [
+          "Use specific numbers and metrics to quantify achievements",
+          "Use clear and concise formatting throughout the resume"
+        ]
+      },
+      "strengths": [
+        "Strong technical skills in programming languages such as Python",
+        "Experience with cybersecurity and software development",
+        "Good formatting and organization of the resume"
+      ],
+      "weaknesses": [
+        "Lack of specific details about projects and experiences",
+        "Some instances of buzzword stuffing and vague quantifications",
+        "Skills in MySQL appear to be at risk of decay"
+      ]
+    }
+  },
+  {
+    "id": "49fe18f0-b064-4e10-8f40-18992002e41f",
+    "filename": "Jothan CV.pdf",
+    "uploaded_at": "2026-03-07T17:51:55.703097+00:00",
+    "profile": {
+      "skills": [
+        "Python",
+        "Java",
+        "C",
+        "OpenCV",
+        "MediaPipe",
+        "SQL",
+        "RESTAPIs",
+        "Data preprocessing",
+        "Excel/CSV handling",
+        "NumPy",
+        "Pandas",
+        "Git",
+        "VSCode"
+      ],
+      "projects": [
+        {
+          "name": "AI-Based SQL Query Generator using LLM",
+          "technologies": [
+            "Python",
+            "LLM",
+            "SQL"
+          ],
+          "description": "Developed a system that allows users to upload Excel datasets and automatically convert natural language queries into executable SQL statements using a Large Language Model (LLM)."
+        },
+        {
+          "name": "Return Loop",
+          "technologies": [
+            "Python"
+          ],
+          "description": "Implemented basic network security concepts using Python, simulated common vulnerabilities, and studied prevention techniques."
+        },
+        {
+          "name": "Gesture-Based Virtual Whiteboard with Dysgraphia Support",
+          "technologies": [
+            "OpenCV",
+            "MediaPipe",
+            "TensorFlow/Keras",
+            "NumPy"
+          ],
+          "description": "Developed a real-time gesture-controlled virtual whiteboard using OpenCV and MediaPipe for accurate fingertip tracking and contactless air drawing via webcam."
+        }
+      ],
+      "experience": [
+        "— Developed an AI-powered SQL Query Generator that converts natural language prompts into SQL statements, trained and fine-tuned a Large Language Model (LLM) to generate accurate SQL queries, and built a system where users upload Excel files and retrieve specific data using natural language prompts."
+      ]
+    },
+    "deep_analysis": {
+      "overall_score": 82,
+      "overall_verdict": "Strong",
+      "trajectory_anomalies": [
+        {
+          "anomaly_type": "short_tenure",
+          "description": "Internship at HalaCampus lasted only 1 month",
+          "severity": "low",
+          "time_period": "May 2025 – June 2025"
+        }
+      ],
+      "trajectory_summary": "The candidate's career trajectory appears to be progressing normally, with a short internship being the only notable anomaly.",
+      "inflation_flags": [
+        {
+          "claim": "Built end-to-end systems",
+          "reason": "Lack of specific details",
+          "severity": "low",
+          "category": "vague_quantification"
+        },
+        {
+          "claim": "Skilled in Python, Java, and modern ML frameworks",
+          "reason": "Overly broad claim",
+          "severity": "low",
+          "category": "buzzword_stuffing"
+        }
+      ],
+      "inflation_risk_level": "low",
+      "inflation_summary": "The candidate's resume appears to be mostly free of inflation, with only minor instances of vague quantification and buzzword stuffing.",
+      "decayed_skills": [
+        {
+          "skill": "C",
+          "last_used": "Unknown",
+          "decay_risk": "medium",
+          "recommendation": "Provide recent examples of C usage or remove from skills list"
+        }
+      ],
+      "decay_summary": "The candidate's skill in C may be at risk of decay due to lack of recent usage examples.",
+      "ats": {
+        "score": 90,
+        "section_completeness": 95,
+        "keyword_density": 85,
+        "formatting_score": 95,
+        "quantified_achievements": 80,
+        "issues": [
+          "Lack of specific metrics in achievements"
+        ],
+        "suggestions": [
+          "Use specific numbers and metrics to quantify achievements",
+          "Consider adding more technical keywords"
+        ]
+      },
+      "strengths": [
+        "Strong technical skills",
+        "Variety of projects and experiences",
+        "Clear and concise writing style"
+      ],
+      "weaknesses": [
+        "Lack of specific metrics in achievements",
+        "Limited work experience",
+        "Could benefit from more detail in some project descriptions"
+      ]
+    }
+  },
+  {
+    "id": "195fd328-3768-46a9-ac97-9f457fdbf6d4",
+    "filename": "AlenSajiSkariahResume.pdf",
+    "uploaded_at": "2026-03-07T17:57:31.342574+00:00",
+    "profile": {
+      "skills": [
+        "Python",
+        "MySQL",
+        "CHTML",
+        "CSS",
+        "Git",
+        "Github",
+        "VSC"
+      ],
+      "projects": [
+        {
+          "name": "Train Ticket Booking System",
+          "technologies": [
+            "Python",
+            "MySQL"
+          ],
+          "description": "Built a Python–MySQL based Train Ticket Booking System with an intuitive interface for booking, cancellation, and ticket management. Ensured fast and accurate ticket booking and cancellation with minimal user effort. Improved data reliability through structured MySQL database design and validation. Reduced manual errors by automating ticket and schedule management."
+        },
+        {
+          "name": "Real-Time AI Hallucination Detection System",
+          "technologies": [
+            "Python"
+          ],
+          "description": "Developing a Real-Time Hallucination Detection System to identify inaccurate or misleading AI-generated content. The project focuses on improving response reliability through model fine-tuning and optimized context generation. Successfully fine-tuned the base model to improve factual consistency. Resolved context generation issues to produce more relevant and coherent responses."
+        }
+      ],
+      "experience": [
+        "(01/2026 - Present) — Focus on full-stack development using Python and React with industry-standard practices. The internship emphasizes REST APIs, authentication, database management, and deployment.",
+        "(06/2025 - Present) — Built an optimized web scraper to extract product details from Myntra, Ajio, and Flipkart using Python, Selenium, and BeautifulSoup. Developed RESTful APIs with Flask to connect frontend with backend for search. Added anti-blocking, error handling, and testing, ensuring reliable and scalable data extraction.",
+        "(05/2025 - 06/2025) — Developed a Python-based Active Directory security analyzer with IP and Privilege Analysis modules to identify risky logins and privilege misuse. Built an IP Analyzer using Windows Event Logs, RDP session data, and netstat to map user login locations and detect suspicious access. Designed risk classification logic to categorize AD accounts based on group memberships and security flags for access control auditing. Used BloodHound, PingCastle, ldap3, and pywinrm to analyze attack paths, assess domain health, and automate AD data collection."
+      ]
+    },
+    "deep_analysis": {
+      "overall_score": 82,
+      "overall_verdict": "Strong",
+      "trajectory_anomalies": [
+        {
+          "anomaly_type": "short_tenure",
+          "description": "Internship at Digital University Kerala lasted only 1 month",
+          "severity": "low",
+          "time_period": "05/2025 - 06/2025"
+        }
+      ],
+      "trajectory_summary": "The candidate's career trajectory appears to be progressing normally, with a minor anomaly in the short tenure at Digital University Kerala.",
+      "inflation_flags": [
+        {
+          "claim": "full-stack development using Python and React with industry-standard practices",
+          "reason": "excessive jargon without substance",
+          "severity": "low",
+          "category": "buzzword_stuffing"
+        }
+      ],
+      "inflation_risk_level": "low",
+      "inflation_summary": "The candidate's resume appears to have a low risk of inflation, with only minor instances of buzzword stuffing.",
+      "decayed_skills": [
+        {
+          "skill": "MySQL",
+          "last_used": "2022",
+          "decay_risk": "medium",
+          "recommendation": "update resume to reflect recent usage or remove skill"
+        }
+      ],
+      "decay_summary": "The candidate's skill in MySQL appears to be at risk of decay, as it has not been used in recent projects or roles.",
+      "ats": {
+        "score": 90,
+        "section_completeness": 95,
+        "keyword_density": 85,
+        "formatting_score": 95,
+        "quantified_achievements": 80,
+        "issues": [
+          "lack of quantified achievements in some sections"
+        ],
+        "suggestions": [
+          "add specific numbers and metrics to achievements",
+          "use keywords from job postings in resume"
+        ]
+      },
+      "strengths": [
+        "strong technical skills",
+        "variety of projects and experiences",
+        "clear and concise writing style"
+      ],
+      "weaknesses": [
+        "limited work experience",
+        "some sections lack quantified achievements",
+        "minor instances of buzzword stuffing"
       ]
     }
   }

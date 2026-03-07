@@ -2363,13 +2363,14 @@ body::before {
 .rh-card-main {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
+  gap: 10px;
+  padding: 10px 14px;
+  flex-wrap: nowrap;
 }
 
 .rh-card-icon {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--r-sm);
   background: var(--blue-light);
   color: var(--blue);
@@ -2379,36 +2380,31 @@ body::before {
   flex-shrink: 0;
 }
 
-.rh-card-info {
-  flex: 1;
-  min-width: 0;
-}
 .rh-card-name {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-0);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex-shrink: 1;
+  min-width: 0;
 }
 .rh-card-meta {
   font-size: 0.68rem;
   color: var(--text-4);
-  margin-top: 2px;
   font-family: var(--mono);
-}
-
-.rh-card-stats {
-  display: flex;
-  gap: 10px;
+  white-space: nowrap;
   flex-shrink: 0;
 }
+
 .rh-stat {
   font-size: 0.68rem;
   font-weight: 600;
   color: var(--text-3);
   font-family: var(--mono);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .rh-score {
   font-weight: 700;
@@ -2434,6 +2430,139 @@ body::before {
 }
 .rh-delete-btn:hover {
   background: var(--rose-light);
+  color: var(--rose);
+}
+
+/* Summary button on card (text button) */
+.rh-summary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 0.68rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.rh-summary-btn:hover {
+  background: var(--blue-light);
+  color: var(--blue);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+.rh-summary-btn:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+/* ============================================================
+   SUMMARY MODAL
+   ============================================================ */
+.summary-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn 0.2s ease;
+}
+.summary-modal-overlay.summary-hidden { display: none; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.summary-modal {
+  width: 90%;
+  max-width: 560px;
+  max-height: 80vh;
+  background: var(--bg-2);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(0, 212, 170, 0.08);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.summary-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.summary-modal-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-0);
+}
+.summary-modal-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-3);
+  font-size: 1.4rem;
+  cursor: pointer;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.summary-modal-close:hover {
+  background: var(--surface);
+  color: var(--text-0);
+}
+
+.summary-modal-body {
+  padding: 22px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.summary-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 16px;
+}
+
+.summary-content {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: var(--text-1);
+}
+.summary-content strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.summary-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px 20px;
+  gap: 8px;
   color: var(--rose);
 }
 

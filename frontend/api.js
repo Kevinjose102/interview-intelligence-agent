@@ -69,6 +69,15 @@ export async function deleteResumeRecord(id) {
   return res.json();
 }
 
+export async function generateResumeSummary(profile, deepAnalysis, transcript) {
+  const res = await fetch(`${BASE}/resume/generate-summary`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ profile, deep_analysis: deepAnalysis, transcript }),
+  });
+  return res.json();
+}
+
 export function subscribeSSE(onMessage) {
   const source = new EventSource(`${BASE}/conversations/stream`);
   source.onmessage = (event) => {

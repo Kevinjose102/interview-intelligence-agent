@@ -990,6 +990,26 @@
     </main>
   </div>
 
+  <!-- ===== SUMMARY MODAL ===== -->
+  <div id="summary-modal" class="summary-modal-overlay summary-hidden" onclick="if(event.target===this)this.classList.add('summary-hidden')">
+    <div class="summary-modal">
+      <div class="summary-modal-header">
+        <h3 id="summary-modal-title">Candidate Summary</h3>
+        <button class="summary-modal-close" onclick="document.getElementById('summary-modal').classList.add('summary-hidden')">&times;</button>
+      </div>
+      <div class="summary-modal-body" id="summary-modal-body">
+        <div class="summary-loading">
+          <div class="loading-rings">
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+          </div>
+          <p class="text-muted">Generating summary with AI...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== TOAST ===== -->
   <div id="toast-container" class="toast-container"></div>
 

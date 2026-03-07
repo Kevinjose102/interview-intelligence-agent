@@ -458,6 +458,69 @@ async def delete_resume_record(record_id: str):
 
 
 # ------------------------------------------------------------------ #
+# Resume summary generation
+# ------------------------------------------------------------------ #
+
+@app.post("/resume/generate-summary")
+async def generate_resume_summary(payload: dict):
+    """
+    Combine resume analysis data and interview transcript
+    to produce a concise candidate summary using Groq LLM.
+    """
+    profile = payload.get("profile", {})
+    deep_analysis = payload.get("deep_analysis", {})
+    transcript = payload.get("transcript", "")
+
+    api_key = os.getenv("GROQ_API_KEY", "")
+    if not api_key or api_key == "your-groq-api-key-here":
+        return {"error": "GROQ_API_KEY not configured"}
+
+    try:
+        from groq import Groq
+        client = Groq(api_key=api_key)
+
+        profile_text = json.dumps(profile, indent=2) if isinstance(profile, dict) else str(profile)
+        analysis_text = json.dumps(deep_analysis, indent=2) if isinstance(deep_analysis, dict) else str(deep_analysis)
+
+        prompt = f"""You are a senior HR analyst. Based on the candidate's resume analysis and interview transcript, generate a concise interview summary (150-250 words) that includes:
+
+1. **Candidate Overview** — key skills and experience level
+2. **Interview Highlights** — notable answers, demonstrated strengths
+3. **Concerns** — any gaps, inconsistencies, or red flags
+4. **Recommendation** — brief hire/no-hire leaning with justification
+
+Resume Profile:
+{profile_text}
+
+Deep Analysis:
+{analysis_text}
+
+Interview Transcript:
+{transcript if transcript else '(No transcript available — summarize based on resume analysis only)'}
+
+Return the summary as plain text with the section headers in bold using **Section** format. Be concise and actionable."""
+
+        response = await asyncio.to_thread(
+            lambda: client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": "You are a concise, professional HR analyst."},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.5,
+                max_tokens=500,
+            )
+        )
+
+        summary = response.choices[0].message.content
+        return {"status": "ok", "summary": summary}
+
+    except Exception as e:
+        print(f"[resume/generate-summary] Error: {e}")
+        return {"error": str(e)}
+
+
+# ------------------------------------------------------------------ #
 # Follow-up question generation
 # ------------------------------------------------------------------ #
 
