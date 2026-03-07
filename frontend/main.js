@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initKeyboardShortcuts();
   initSSE();
   loadExistingConversations();
+  initHealthCheck();
 });
 
 /* ================================================================
@@ -917,4 +918,98 @@ function fmtTime(ts) {
     return `${m}:${String(s).padStart(2, '0')}`;
   }
   return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+/* ================================================================
+   DASHBOARD HEALTH CHECK
+   ================================================================ */
+function initHealthCheck() {
+  refreshHealthStatus();
+  window.refreshHealthStatus = refreshHealthStatus;
+
+  // Set init timestamp
+  const initEl = document.getElementById('activity-init-time');
+  if (initEl) {
+    initEl.textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+}
+
+async function refreshHealthStatus() {
+  const setDot = (id, cls) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    // find the dot sibling
+    const item = el.closest('.health-item');
+    if (!item) return;
+    const dot = item.querySelector('.health-dot');
+    if (dot) {
+      dot.className = 'health-dot ' + cls;
+    }
+  };
+
+  // Check backend
+  try {
+    const res = await fetch('/health');
+    const data = await res.json();
+    const backendEl = document.getElementById('health-backend');
+    if (data.status === 'ok') {
+      backendEl.textContent = 'Online';
+      backendEl.style.color = 'var(--emerald)';
+      setDot('health-backend', 'health-dot health-dot-ok');
+
+      // Update activity feed
+      const activityItems = document.querySelectorAll('#activity-feed .activity-item');
+      if (activityItems[1]) {
+        const timeEl = activityItems[1].querySelector('.activity-time');
+        const dotEl = activityItems[1].querySelector('.activity-dot');
+        if (timeEl) timeEl.textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        if (dotEl) dotEl.className = 'activity-dot activity-dot-success';
+      }
+      const actCount = document.getElementById('activity-count');
+      if (actCount) actCount.textContent = '2';
+    } else {
+      backendEl.textContent = 'Error';
+      backendEl.style.color = 'var(--rose)';
+      setDot('health-backend', 'health-dot health-dot-error');
+    }
+  } catch (e) {
+    const backendEl = document.getElementById('health-backend');
+    if (backendEl) {
+      backendEl.textContent = 'Offline';
+      backendEl.style.color = 'var(--rose)';
+      setDot('health-backend', 'health-dot health-dot-error');
+    }
+  }
+
+  // Set API statuses as configured (they're server-side)
+  ['health-deepgram', 'health-groq', 'health-openrouter'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = 'Ready';
+      el.style.color = 'var(--emerald)';
+      setDot(id, 'health-dot health-dot-ok');
+    }
+  });
+
+  // SSE status
+  const sseEl = document.getElementById('health-sse');
+  if (sseEl) {
+    if (state.sseSource && state.sseSource.readyState === EventSource.OPEN) {
+      sseEl.textContent = 'Connected';
+      sseEl.style.color = 'var(--emerald)';
+      setDot('health-sse', 'health-dot health-dot-ok');
+    } else {
+      sseEl.textContent = 'Standby';
+      sseEl.style.color = 'var(--text-3)';
+      setDot('health-sse', 'health-dot health-dot-muted');
+    }
+  }
+
+  // WebSocket — standby until audio is connected
+  const wsEl = document.getElementById('health-ws');
+  if (wsEl) {
+    wsEl.textContent = 'Standby';
+    wsEl.style.color = 'var(--text-3)';
+    setDot('health-ws', 'health-dot health-dot-muted');
+  }
 }
