@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Interview Intelligence Agent",
+  "version": "1.0.0",
+  "description": "Capture Google Meet audio for real-time transcription via Deepgram",
+  "permissions": ["tabCapture", "activeTab", "scripting", "offscreen"],
+  "host_permissions": ["https://meet.google.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Interview Intelligence"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Interview Intelligence — Microphone Access</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #16213e;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 420px;
+      text-align: center;
+      border: 1px solid #1a1a3e;
+    }
+    h1 { font-size: 20px; margin-bottom: 12px; color: #fff; }
+    p { font-size: 14px; color: #aaa; margin-bottom: 24px; line-height: 1.6; }
+    .status { font-size: 15px; font-weight: 600; margin-top: 16px; }
+    .status.granted { color: #00d474; }
+    .status.denied { color: #e74c3c; }
+    .status.waiting { color: #f0a500; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎤 Microphone Access Required</h1>
+    <p>Interview Intelligence needs microphone access to capture your audio during the interview. Please click <strong>Allow</strong> when Chrome asks for permission.</p>
+    <div id="status" class="status waiting">Requesting access...</div>
+  </div>
+  <script src="permissions.js"></script>
+</body>
+</html>

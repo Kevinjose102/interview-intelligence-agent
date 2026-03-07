@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interview Intelligence</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 320px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .header p {
+      font-size: 11px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .status-card {
+      background: #16213e;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid #1a1a3e;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #555;
+      flex-shrink: 0;
+      transition: background 0.3s ease;
+    }
+
+    .status-dot.idle { background: #555; }
+    .status-dot.connecting {
+      background: #f0a500;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    .status-dot.capturing {
+      background: #00d474;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .status-dot.stopped { background: #e74c3c; }
+    .status-dot.error { background: #e74c3c; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .status-label {
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .status-detail {
+      font-size: 11px;
+      color: #888;
+      margin-top: 8px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.5px;
+    }
+
+    #startBtn {
+      background: linear-gradient(135deg, #00d474, #00a86b);
+      color: #fff;
+    }
+
+    #startBtn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(0, 212, 116, 0.3);
+    }
+
+    #stopBtn {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: #fff;
+    }
+
+    #stopBtn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 10px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎤 Interview Intelligence</h1>
+    <p>Google Meet Audio Capture</p>
+  </div>
+
+  <div class="status-card">
+    <div class="status-row">
+      <div id="statusDot" class="status-dot idle"></div>
+      <span id="statusLabel" class="status-label">Idle</span>
+    </div>
+    <div id="statusDetail" class="status-detail">Ready to capture</div>
+  </div>
+
+  <div class="controls">
+    <button id="startBtn">▶ Start Capture</button>
+    <button id="stopBtn" disabled>■ Stop Capture</button>
+  </div>
+
+  <div class="footer">Ensure you're on a Google Meet tab</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
