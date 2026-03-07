@@ -11,6 +11,7 @@ import websockets
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 import transcript_handler
+from conversation_manager import manager as conversation_manager
 from models import TranscriptChunk
 
 router = APIRouter()
@@ -43,6 +44,9 @@ async def audio_stream(websocket: WebSocket, speaker: str):
     await websocket.accept()
     session_id = str(uuid.uuid4())
     print(f"[audio_stream] Connection opened: speaker={speaker}, session={session_id}")
+
+    # Register session with conversation manager
+    conversation_manager.start_session(session_id)
 
     # Track metadata for the current pending audio chunk
     pending_metadata = {"speaker": speaker, "timestamp": 0.0}
@@ -81,6 +85,8 @@ async def audio_stream(websocket: WebSocket, speaker: str):
                 await deepgram_ws.close()
             except Exception:
                 pass
+        # End session in conversation manager
+        conversation_manager.end_session(session_id)
         print(f"[audio_stream] Connection closed: speaker={speaker}, session={session_id}")
 
 
