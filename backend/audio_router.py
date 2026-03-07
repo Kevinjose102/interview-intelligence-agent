@@ -16,6 +16,11 @@ from models import TranscriptChunk
 
 router = APIRouter()
 
+# Shared session: both speakers tag transcripts with the same ID
+# Audio streams stay completely separate (different Deepgram connections)
+_active_session_id: str | None = None
+_active_speaker_count: int = 0
+
 DEEPGRAM_WS_URL = (
     "wss://api.deepgram.com/v1/listen"
     "?model=nova-2"
@@ -41,11 +46,20 @@ async def audio_stream(websocket: WebSocket, speaker: str):
     Accepts audio from the Chrome Extension, forwards it to Deepgram,
     and processes the returned transcripts.
     """
+    global _active_session_id, _active_speaker_count
+
     await websocket.accept()
-    session_id = str(uuid.uuid4())
+
+    # Shared session ID — first speaker creates, second joins
+    # Audio routing is NOT affected, only transcript tagging
+    if _active_session_id is None:
+        _active_session_id = str(uuid.uuid4())
+    session_id = _active_session_id
+    _active_speaker_count += 1
+
     print(f"[audio_stream] Connection opened: speaker={speaker}, session={session_id}")
 
-    # Register session with conversation manager
+    # Register session with conversation manager (idempotent)
     conversation_manager.start_session(session_id)
 
     # Track metadata for the current pending audio chunk
@@ -87,8 +101,12 @@ async def audio_stream(websocket: WebSocket, speaker: str):
                 await deepgram_ws.close()
             except Exception:
                 pass
-        # End session in conversation manager
-        conversation_manager.end_session(session_id)
+        # Only end session when both speakers have disconnected
+        _active_speaker_count -= 1
+        if _active_speaker_count <= 0:
+            conversation_manager.end_session(session_id)
+            _active_session_id = None
+            _active_speaker_count = 0
         print(f"[audio_stream] Connection closed: speaker={speaker}, session={session_id}")
 
 

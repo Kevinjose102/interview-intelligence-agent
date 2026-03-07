@@ -61,3 +61,26 @@ class ConversationContext(BaseModel):
     session_id: str
     recent_messages: list[ConversationMessage]
     conversation_history: list[dict]  # simplified [{speaker, text}] for LLM
+
+
+# ------------------------------------------------------------------ #
+# LLM Reasoning Engine models
+# ------------------------------------------------------------------ #
+
+class AnalysisInput(BaseModel):
+    """Input payload for the LLM Reasoning Engine."""
+    transcript_chunk: str  # latest candidate answer
+    speaker: str  # who said it
+    conversation_history: list[dict]  # [{speaker, text}]
+    resume_profile: dict | None = None  # structured resume (skills, projects, experience)
+    resume_context: str | None = None  # retrieved resume context (RAG)
+    conversation_summary: str | None = None  # summary so far
+    session_id: str = ""
+
+
+class AnalysisResult(BaseModel):
+    """Output from the LLM Reasoning Engine."""
+    follow_up_questions: list[str] = []
+    consistency_flags: list[str] = []
+    answer_quality_score: int = 0  # 0-100
+    skill_confidence_updates: dict[str, int] = {}  # skill → confidence 0-100

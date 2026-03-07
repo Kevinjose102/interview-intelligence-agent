@@ -13,7 +13,8 @@ from fastapi.responses import StreamingResponse
 
 from audio_router import router as audio_router
 from conversation_manager import manager as conversation_manager
-from models import TranscriptChunk
+from models import AnalysisInput, TranscriptChunk
+import llm_reasoning_engine
 import transcript_handler
 
 # Load environment variables from .env
@@ -254,3 +255,86 @@ async def get_summary():
         "latest_message": latest,
     }
 
+
+# ------------------------------------------------------------------ #
+# LLM Reasoning Engine endpoints
+# ------------------------------------------------------------------ #
+
+@app.post("/ai_analysis")
+async def run_analysis(input_data: AnalysisInput):
+    """
+    Run LLM reasoning engine analysis on a candidate response.
+    Returns follow-up questions, consistency flags, quality score,
+    and skill confidence updates.
+    """
+    result = await llm_reasoning_engine.analyze(input_data)
+    return result.model_dump()
+
+
+@app.get("/analysis_results/{session_id}")
+async def get_analysis_results(session_id: str):
+    """Return the latest cached analysis for a session."""
+    result = llm_reasoning_engine.get_cached_analysis(session_id)
+    if result is None:
+        return {"error": "No analysis found for this session"}
+    return result.model_dump()
+
+
+@app.get("/analysis_results")
+async def get_all_analysis_results():
+    """Return all cached analysis results."""
+    analyses = llm_reasoning_engine.get_all_analyses()
+    return {
+        sid: r.model_dump()
+        for sid, r in analyses.items()
+    }
+
+
+@app.get("/analyze_latest")
+async def analyze_latest():
+    """
+    One-click analysis: auto-pull the latest conversation and run
+    the LLM reasoning engine on the most recent candidate answer.
+    """
+    # Get the latest conversation
+    conversations = conversation_manager.list_conversations()
+    if not conversations:
+        return {"error": "No conversations found"}
+
+    latest = conversations[-1]
+    conv = conversation_manager.get_conversation(latest.session_id)
+    if conv is None or not conv.messages:
+        return {"error": "Conversation has no messages"}
+
+    # Build conversation history
+    history = [{"speaker": m.speaker, "text": m.text} for m in conv.messages]
+
+    # Find the last candidate message for analysis
+    last_candidate_msg = None
+    for msg in reversed(conv.messages):
+        if msg.speaker == "candidate":
+            last_candidate_msg = msg
+            break
+
+    # If no candidate message, analyze the last message regardless
+    target_msg = last_candidate_msg or conv.messages[-1]
+
+    input_data = AnalysisInput(
+        transcript_chunk=target_msg.text,
+        speaker=target_msg.speaker,
+        conversation_history=history,
+        resume_profile=None,  # TODO: integrate with resume intelligence
+        resume_context=None,
+        conversation_summary=None,
+        session_id=conv.session_id,
+    )
+
+    result = await llm_reasoning_engine.analyze(input_data)
+    return {
+        "session_id": conv.session_id,
+        "analyzed_message": {
+            "speaker": target_msg.speaker,
+            "text": target_msg.text,
+        },
+        "analysis": result.model_dump(),
+    }
