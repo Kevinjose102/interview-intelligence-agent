@@ -12,10 +12,16 @@ api_key = os.getenv("OPENROUTER_API_KEY")
 
 print("API KEY LOADED:", api_key is not None)
 
-client = OpenAI(
-    api_key=api_key,
-    base_url="https://openrouter.ai/api/v1"
-)
+_client = None
+
+def _get_client():
+    global _client
+    if _client is None:
+        _client = OpenAI(
+            api_key=api_key,
+            base_url="https://openrouter.ai/api/v1"
+        )
+    return _client
 
 def parse_resume(text):
 
@@ -40,7 +46,7 @@ Resume text:
 {text}
 """
 
-    response = client.chat.completions.create(
+    response = _get_client().chat.completions.create(
         model="meta-llama/llama-3-8b-instruct",
         messages=[
             {"role": "system", "content": "You extract structured resume information."},

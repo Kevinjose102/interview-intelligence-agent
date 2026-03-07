@@ -344,6 +344,127 @@
               </div>
             </div>
           </div>
+
+          <!-- System Health Card -->
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <h3>System Health</h3>
+              <span class="chip-btn" id="health-refresh-btn" style="cursor:pointer" onclick="window.refreshHealthStatus && window.refreshHealthStatus()">Refresh ↻</span>
+            </div>
+            <div class="dash-card-body" id="dash-health-preview">
+              <div class="health-grid">
+                <div class="health-item">
+                  <span class="health-dot health-dot-checking"></span>
+                  <span class="health-label">Backend API</span>
+                  <span class="health-status" id="health-backend">Checking…</span>
+                </div>
+                <div class="health-item">
+                  <span class="health-dot health-dot-checking"></span>
+                  <span class="health-label">Deepgram STT</span>
+                  <span class="health-status" id="health-deepgram">Configured</span>
+                </div>
+                <div class="health-item">
+                  <span class="health-dot health-dot-checking"></span>
+                  <span class="health-label">Groq LLM</span>
+                  <span class="health-status" id="health-groq">Configured</span>
+                </div>
+                <div class="health-item">
+                  <span class="health-dot health-dot-checking"></span>
+                  <span class="health-label">OpenRouter</span>
+                  <span class="health-status" id="health-openrouter">Configured</span>
+                </div>
+                <div class="health-item">
+                  <span class="health-dot health-dot-checking"></span>
+                  <span class="health-label">SSE Stream</span>
+                  <span class="health-status" id="health-sse">Checking…</span>
+                </div>
+                <div class="health-item">
+                  <span class="health-dot health-dot-checking"></span>
+                  <span class="health-label">WebSocket</span>
+                  <span class="health-status" id="health-ws">Standby</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions Card -->
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <h3>Quick Actions</h3>
+            </div>
+            <div class="dash-card-body">
+              <div class="quick-actions-grid">
+                <button class="quick-action-btn" onclick="document.getElementById('nav-resume').click()">
+                  <div class="qa-icon qa-icon-blue">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  </div>
+                  <span class="qa-label">Upload Resume</span>
+                  <span class="qa-desc">Parse with AI</span>
+                </button>
+                <button class="quick-action-btn" onclick="document.getElementById('nav-questions').click()">
+                  <div class="qa-icon qa-icon-purple">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <span class="qa-label">Generate Questions</span>
+                  <span class="qa-desc">AI follow-ups</span>
+                </button>
+                <button class="quick-action-btn" onclick="document.getElementById('nav-consistency').click()">
+                  <div class="qa-icon qa-icon-emerald">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  </div>
+                  <span class="qa-label">Run Analysis</span>
+                  <span class="qa-desc">Credibility check</span>
+                </button>
+                <button class="quick-action-btn" onclick="document.getElementById('nav-transcript').click()">
+                  <div class="qa-icon qa-icon-amber">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+                  </div>
+                  <span class="qa-label">Live Transcript</span>
+                  <span class="qa-desc">Start recording</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Platform Activity Card -->
+          <div class="dash-card dash-card-lg">
+            <div class="dash-card-header">
+              <h3>Platform Activity</h3>
+              <span class="count-badge" id="activity-count">0</span>
+            </div>
+            <div class="dash-card-body" id="dash-activity-preview">
+              <div class="activity-feed" id="activity-feed">
+                <div class="activity-item">
+                  <div class="activity-dot activity-dot-info"></div>
+                  <div class="activity-content">
+                    <span class="activity-text">System initialized</span>
+                    <span class="activity-time" id="activity-init-time">just now</span>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot activity-dot-info"></div>
+                  <div class="activity-content">
+                    <span class="activity-text">Backend API connected</span>
+                    <span class="activity-time">waiting…</span>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot activity-dot-muted"></div>
+                  <div class="activity-content">
+                    <span class="activity-text">Awaiting resume upload</span>
+                    <span class="activity-time">—</span>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot activity-dot-muted"></div>
+                  <div class="activity-content">
+                    <span class="activity-text">Awaiting audio stream</span>
+                    <span class="activity-time">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

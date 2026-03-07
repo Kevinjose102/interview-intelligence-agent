@@ -54,6 +54,11 @@ export async function getConversation(sessionId) {
   return res.json();
 }
 
+export async function analyzeLatest() {
+  const res = await fetch(`${BASE}/analyze_latest`);
+  return res.json();
+}
+
 export function subscribeSSE(onMessage) {
   const source = new EventSource(`${BASE}/conversations/stream`);
   source.onmessage = (event) => {

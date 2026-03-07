@@ -11,6 +11,9 @@ export default defineConfig({
       '/summary': 'http://localhost:8000',
       '/resume': 'http://localhost:8000',
       '/analyze': 'http://localhost:8000',
+      '/analyze_latest': 'http://localhost:8000',
+      '/ai_analysis': 'http://localhost:8000',
+      '/analysis_results': 'http://localhost:8000',
       '/audio_stream': {
         target: 'ws://localhost:8000',
         ws: true,

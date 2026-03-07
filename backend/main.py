@@ -19,8 +19,7 @@ from conversation_manager import manager as conversation_manager
 from models import AnalysisInput, TranscriptChunk
 import llm_reasoning_engine
 import transcript_handler
-from resume_intelligence.pipeline import process_resume
-from resume_intelligence.resume_analyzer import analyze_resume
+
 
 # Load environment variables from .env
 load_dotenv()
@@ -379,6 +378,8 @@ async def upload_resume(file: UploadFile = File(...)):
             f.write(content)
 
         # Run pipeline (sync — runs in thread to avoid blocking)
+        from resume_intelligence.pipeline import process_resume
+        from resume_intelligence.resume_analyzer import analyze_resume
         profile, raw_text = await asyncio.to_thread(process_resume, tmp_path)
         profile_dict = profile.model_dump() if hasattr(profile, "model_dump") else profile.dict()
 
