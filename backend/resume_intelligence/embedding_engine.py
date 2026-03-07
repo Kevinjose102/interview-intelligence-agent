@@ -1,6 +1,12 @@
 from openai import OpenAI
 
-client = OpenAI()
+client = None
+
+def _get_client():
+    global client
+    if client is None:
+        client = OpenAI()
+    return client
 
 def generate_embeddings(resume_profile):
 
@@ -16,7 +22,7 @@ def generate_embeddings(resume_profile):
 
     for chunk in text_chunks:
 
-        emb = client.embeddings.create(
+        emb = _get_client().embeddings.create(
             model="text-embedding-3-small",
             input=chunk
         )
