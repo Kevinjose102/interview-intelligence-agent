@@ -144,3 +144,113 @@ async def end_conversation(session_id: str):
         return {"error": "Session not found"}, 404
     conversation_manager.end_session(session_id)
     return {"status": "ended", "session_id": session_id}
+
+
+# ------------------------------------------------------------------ #
+# Summary endpoint (Groq-powered)
+# ------------------------------------------------------------------ #
+
+async def _generate_groq_summary(transcript_text: str) -> str | None:
+    """Use Groq (Llama 3) to generate an intelligent interview summary."""
+    api_key = os.getenv("GROQ_API_KEY", "")
+    if not api_key or api_key == "your-groq-api-key-here":
+        return None
+
+    try:
+        from groq import Groq
+
+        client = Groq(api_key=api_key)
+
+        response = await asyncio.to_thread(
+            lambda: client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are an interview analysis assistant. "
+                            "Summarize the interview conversation in 3-5 sentences. "
+                            "Focus on: topics discussed, key points by the candidate, "
+                            "and notable observations."
+                        ),
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Transcript:\n{transcript_text}",
+                    },
+                ],
+                temperature=0.3,
+                max_tokens=500,
+            )
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"[summary] Groq error: {e}")
+        return None
+
+
+@app.get("/summary")
+async def get_summary():
+    """
+    Return a summary of the most recent conversation:
+    - summary: AI-generated summary via Groq (falls back to raw transcript)
+    - last_4_messages: the 4 most recent speaker turns
+    - latest_message: the single latest speaker turn
+    - stats: message count, duration, speakers
+    """
+    conversations = conversation_manager.list_conversations()
+    if not conversations:
+        return {
+            "error": "No conversations found",
+            "summary": None,
+            "last_4_messages": [],
+            "latest_message": None,
+        }
+
+    # Get the most recent conversation (last in the list)
+    latest_summary = conversations[-1]
+    conv = conversation_manager.get_conversation(latest_summary.session_id)
+    if conv is None or not conv.messages:
+        return {
+            "error": "Conversation has no messages",
+            "summary": None,
+            "last_4_messages": [],
+            "latest_message": None,
+        }
+
+    messages = conv.messages
+
+    # Build raw transcript text
+    transcript_lines = []
+    for msg in messages:
+        transcript_lines.append(f"{msg.speaker.upper()}: {msg.text}")
+    raw_transcript = "\n".join(transcript_lines)
+
+    # Generate AI summary via Groq (falls back to raw transcript)
+    ai_summary = await _generate_groq_summary(raw_transcript)
+
+    # Count per-speaker stats
+    speaker_counts: dict[str, int] = {}
+    for msg in messages:
+        speaker_counts[msg.speaker] = speaker_counts.get(msg.speaker, 0) + 1
+
+    # Last 4 messages
+    last_4 = [m.model_dump() for m in messages[-4:]]
+
+    # Latest message
+    latest = messages[-1].model_dump()
+
+    return {
+        "session_id": conv.session_id,
+        "status": conv.status,
+        "stats": {
+            "total_messages": len(messages),
+            "duration_seconds": conv.duration,
+            "speakers": speaker_counts,
+        },
+        "summary": ai_summary if ai_summary else raw_transcript,
+        "summary_source": "groq" if ai_summary else "raw_transcript",
+        "last_4_messages": last_4,
+        "latest_message": latest,
+    }
+
