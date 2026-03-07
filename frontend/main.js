@@ -10,6 +10,8 @@ import {
   subscribeSSE,
   getConversations,
   getConversation,
+  getResumeHistory,
+  deleteResumeRecord,
 } from './api.js';
 
 /* ──────── STATE ──────── */
@@ -42,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadExistingConversations();
   initHealthCheck();
   startAnalyzeLatestPolling();
+  loadResumeHistory();
 });
 
 /* ================================================================
@@ -178,7 +181,6 @@ async function handleResumeUpload(file) {
 
     state.resumeProfile = result.profile;
     renderResumeProfile(result.profile);
-    updateDashboardResumePreview(result.profile);
 
     // Render deep analysis if available
     if (result.deep_analysis) {
@@ -186,6 +188,12 @@ async function handleResumeUpload(file) {
     }
 
     showToast('Resume analyzed successfully!', 'success');
+
+    // Refresh resume history list
+    loadResumeHistory();
+
+    // Re-show upload zone so user can upload another resume
+    $('#upload-card').classList.remove('hidden');
 
     // Enable dependent buttons
     $('#btn-generate-questions').disabled = false;
@@ -465,6 +473,134 @@ function renderDeepAnalysis(analysis) {
       swCard.classList.remove('hidden');
     }
   }
+}
+
+/* ================================================================
+   RESUME HISTORY
+   ================================================================ */
+async function loadResumeHistory() {
+  try {
+    const data = await getResumeHistory();
+    const records = data.records || [];
+    renderResumeHistory(records);
+
+    // Update dashboard resume overview with history count
+    const el = $('#dash-resume-preview');
+    const statEl = $('#stat-resume');
+    if (records.length > 0) {
+      el.innerHTML = `
+        <div class="dash-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" opacity="0.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <p style="color:var(--text-1);font-weight:600">${records.length} resume${records.length !== 1 ? 's' : ''} analyzed</p>
+          <button class="btn btn-primary btn-sm" onclick="document.getElementById('nav-resume').click()">View Resumes</button>
+        </div>`;
+      statEl.textContent = records.length;
+      statEl.style.color = 'var(--emerald)';
+    }
+  } catch (err) {
+    console.warn('[resume-history] Load error:', err);
+  }
+}
+
+function renderResumeHistory(records) {
+  const list = $('#resume-history-list');
+  const empty = $('#resume-history-empty');
+  const countBadge = $('#resume-history-count');
+
+  countBadge.textContent = records.length;
+
+  if (records.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = records.map((r, i) => {
+    const date = new Date(r.uploaded_at).toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    });
+    const skillCount = (r.profile?.skills || []).length;
+    const projectCount = (r.profile?.projects || []).length;
+    const score = r.deep_analysis?.overall_score || '—';
+    let scoreColor = 'var(--emerald)';
+    if (typeof score === 'number') {
+      if (score < 40) scoreColor = 'var(--rose)';
+      else if (score < 70) scoreColor = 'var(--amber)';
+    }
+    return `
+      <div class="resume-history-card" data-record-id="${r.id}" style="animation-delay:${i * 0.04}s">
+        <div class="rh-card-main">
+          <div class="rh-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="rh-card-info">
+            <div class="rh-card-name">${esc(r.filename)}</div>
+            <div class="rh-card-meta">${date}</div>
+          </div>
+          <div class="rh-card-stats">
+            <span class="rh-stat" title="Skills">${skillCount} skills</span>
+            <span class="rh-stat" title="Projects">${projectCount} projects</span>
+            <span class="rh-stat rh-score" style="color:${scoreColor}" title="Quality Score">${score}${typeof score === 'number' ? '/100' : ''}</span>
+          </div>
+          <button class="rh-delete-btn" data-delete-id="${r.id}" title="Delete">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Attach click handlers
+  list.querySelectorAll('.resume-history-card').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      // Skip if delete button was clicked
+      if (e.target.closest('.rh-delete-btn')) return;
+      const id = card.dataset.recordId;
+      const record = records.find((r) => r.id === id);
+      if (record) restoreResumeFromHistory(record, card);
+    });
+  });
+
+  list.querySelectorAll('.rh-delete-btn').forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.deleteId;
+      if (!confirm('Delete this resume from history?')) return;
+      try {
+        await deleteResumeRecord(id);
+        showToast('Resume deleted from history', 'success');
+        loadResumeHistory();
+      } catch (err) {
+        showToast('Failed to delete', 'error');
+      }
+    });
+  });
+}
+
+function restoreResumeFromHistory(record, cardEl) {
+  // Highlight active card
+  $$('.resume-history-card').forEach((c) => c.classList.remove('active'));
+  if (cardEl) cardEl.classList.add('active');
+
+  // Restore profile data
+  state.resumeProfile = record.profile;
+  renderResumeProfile(record.profile);
+
+  // Render deep analysis if available
+  if (record.deep_analysis) {
+    renderDeepAnalysis(record.deep_analysis);
+  }
+
+  // Enable buttons
+  $('#btn-generate-questions').disabled = false;
+  updateAnalyzeButton();
+  $('#stat-resume').textContent = 'Parsed';
+  $('#stat-resume').style.color = 'var(--emerald)';
+  $('#resume-pill').textContent = 'Parsed';
+  $('#resume-pill').classList.add('active');
+
+  showToast(`Loaded: ${record.filename}`, 'success');
 }
 
 /* ================================================================

@@ -59,6 +59,16 @@ export async function analyzeLatest() {
   return res.json();
 }
 
+export async function getResumeHistory() {
+  const res = await fetch(`${BASE}/resume/history`);
+  return res.json();
+}
+
+export async function deleteResumeRecord(id) {
+  const res = await fetch(`${BASE}/resume/history/${id}`, { method: 'DELETE' });
+  return res.json();
+}
+
 export function subscribeSSE(onMessage) {
   const source = new EventSource(`${BASE}/conversations/stream`);
   source.onmessage = (event) => {

@@ -7,6 +7,8 @@ import json
 import os
 import tempfile
 import shutil
+import uuid
+from datetime import datetime, timezone
 from typing import Optional
 
 from dotenv import load_dotenv
@@ -357,6 +359,30 @@ async def analyze_latest():
 
 
 # ------------------------------------------------------------------ #
+# Resume history helpers
+# ------------------------------------------------------------------ #
+
+RESUME_HISTORY_FILE = os.path.join(os.path.dirname(__file__), "resume_history.json")
+
+
+def _load_resume_history() -> list:
+    """Load resume history from JSON file."""
+    if not os.path.exists(RESUME_HISTORY_FILE):
+        return []
+    try:
+        with open(RESUME_HISTORY_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return []
+
+
+def _save_resume_history(records: list):
+    """Save resume history to JSON file."""
+    with open(RESUME_HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(records, f, indent=2, ensure_ascii=False)
+
+
+# ------------------------------------------------------------------ #
 # Resume upload & analysis
 # ------------------------------------------------------------------ #
 
@@ -385,17 +411,50 @@ async def upload_resume(file: UploadFile = File(...)):
 
         # Run deep analysis (async — uses Groq)
         deep_analysis = await analyze_resume(raw_text, profile_dict)
+        deep_analysis_dict = deep_analysis.model_dump()
+
+        # Save to resume history
+        record = {
+            "id": str(uuid.uuid4()),
+            "filename": file.filename,
+            "uploaded_at": datetime.now(timezone.utc).isoformat(),
+            "profile": profile_dict,
+            "deep_analysis": deep_analysis_dict,
+        }
+        history = _load_resume_history()
+        history.append(record)
+        _save_resume_history(history)
+        print(f"[resume/upload] Saved to history: {record['id']} ({file.filename})")
 
         return {
             "status": "ok",
             "profile": profile_dict,
-            "deep_analysis": deep_analysis.model_dump(),
+            "deep_analysis": deep_analysis_dict,
         }
     except Exception as e:
         print(f"[resume/upload] Error: {e}")
         return {"error": str(e)}
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
+@app.get("/resume/history")
+async def get_resume_history():
+    """Return all previously uploaded resumes (most recent first)."""
+    history = _load_resume_history()
+    history.reverse()
+    return {"records": history}
+
+
+@app.delete("/resume/history/{record_id}")
+async def delete_resume_record(record_id: str):
+    """Delete a specific resume history record."""
+    history = _load_resume_history()
+    new_history = [r for r in history if r["id"] != record_id]
+    if len(new_history) == len(history):
+        return {"error": "Record not found"}
+    _save_resume_history(new_history)
+    return {"status": "ok", "deleted": record_id}
 
 
 # ------------------------------------------------------------------ #

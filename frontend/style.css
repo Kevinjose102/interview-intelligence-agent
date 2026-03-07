@@ -2324,3 +2324,116 @@ body::before {
   .ats-bar-row { grid-template-columns: 100px 1fr 30px; }
   .sw-grid { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   RESUME HISTORY
+   ============================================================ */
+.resume-history-section {
+  margin-top: 16px;
+}
+
+.resume-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.resume-history-card {
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.35s ease both;
+}
+.resume-history-card:hover {
+  border-color: var(--border-hover);
+  background: rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.resume-history-card.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  box-shadow: 0 0 16px var(--primary-glow);
+}
+
+.rh-card-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+.rh-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  background: var(--blue-light);
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rh-card-info {
+  flex: 1;
+  min-width: 0;
+}
+.rh-card-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-0);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rh-card-meta {
+  font-size: 0.68rem;
+  color: var(--text-4);
+  margin-top: 2px;
+  font-family: var(--mono);
+}
+
+.rh-card-stats {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.rh-stat {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-3);
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+.rh-score {
+  font-weight: 700;
+}
+
+.rh-delete-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  opacity: 0;
+}
+.resume-history-card:hover .rh-delete-btn {
+  opacity: 1;
+}
+.rh-delete-btn:hover {
+  background: var(--rose-light);
+  color: var(--rose);
+}
+
