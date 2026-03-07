@@ -12,7 +12,7 @@ import asyncio
 import json
 import time
 from collections import OrderedDict
-
+from typing import Optional
 from models import (
     Conversation,
     ConversationContext,
@@ -118,7 +118,7 @@ class ConversationManager:
     # Context for AI engine
     # ------------------------------------------------------------------
 
-    def get_context(self, session_id: str, n: int = 10) -> ConversationContext | None:
+    def get_context(self, session_id: str, n: int = 10) ->  Optional[ConversationContext]:
         """
         Return the last N speaker turns for the AI reasoning engine.
         Includes both full ConversationMessage objects and a simplified
@@ -141,7 +141,7 @@ class ConversationManager:
     # Query APIs
     # ------------------------------------------------------------------
 
-    def get_conversation(self, session_id: str) -> Conversation | None:
+    def get_conversation(self, session_id: str) -> Optional[Conversation]:
         return self._conversations.get(session_id)
 
     def list_conversations(self) -> list[ConversationSummary]:

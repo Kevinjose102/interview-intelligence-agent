@@ -13,7 +13,7 @@ resume_profile = parse_resume(text)
 vector_store = build_resume_index(resume_profile)
 
 # test query
-query = "using phones as storage devices?"
+query = "website for recommending recipes"
 
 query_embedding = generate_embedding(query)
 
