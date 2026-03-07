@@ -1,0 +1,20 @@
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  server: {
+    port: 5173,
+    proxy: {
+      '/health': 'http://localhost:8000',
+      '/transcripts': 'http://localhost:8000',
+      '/transcript_stream': 'http://localhost:8000',
+      '/conversations': 'http://localhost:8000',
+      '/summary': 'http://localhost:8000',
+      '/resume': 'http://localhost:8000',
+      '/analyze': 'http://localhost:8000',
+      '/audio_stream': {
+        target: 'ws://localhost:8000',
+        ws: true,
+      },
+    },
+  },
+});

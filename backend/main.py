@@ -5,9 +5,11 @@ main.py — FastAPI application entrypoint
 import asyncio
 import json
 import os
+import tempfile
+import shutil
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
@@ -16,6 +18,7 @@ from conversation_manager import manager as conversation_manager
 from models import AnalysisInput, TranscriptChunk
 import llm_reasoning_engine
 import transcript_handler
+from resume_intelligence.pipeline import process_resume
 
 # Load environment variables from .env
 load_dotenv()
@@ -338,3 +341,187 @@ async def analyze_latest():
         },
         "analysis": result.model_dump(),
     }
+
+
+# ------------------------------------------------------------------ #
+# Resume upload & analysis
+# ------------------------------------------------------------------ #
+
+@app.post("/resume/upload")
+async def upload_resume(file: UploadFile = File(...)):
+    """
+    Accept a PDF resume, run the resume intelligence pipeline,
+    and return structured profile data (skills, projects, experience).
+    """
+    if not file.filename.lower().endswith(".pdf"):
+        return {"error": "Only PDF files are supported"}
+
+    # Save uploaded file to a temp location
+    tmp_dir = tempfile.mkdtemp()
+    tmp_path = os.path.join(tmp_dir, file.filename)
+    try:
+        with open(tmp_path, "wb") as f:
+            content = await file.read()
+            f.write(content)
+
+        # Run pipeline (sync — runs in thread to avoid blocking)
+        profile = await asyncio.to_thread(process_resume, tmp_path)
+        return {
+            "status": "ok",
+            "profile": profile.model_dump() if hasattr(profile, "model_dump") else profile.dict(),
+        }
+    except Exception as e:
+        print(f"[resume/upload] Error: {e}")
+        return {"error": str(e)}
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
+# ------------------------------------------------------------------ #
+# Follow-up question generation
+# ------------------------------------------------------------------ #
+
+@app.post("/resume/questions")
+async def generate_follow_up_questions(payload: dict):
+    """
+    Generate follow-up interview questions based on resume profile
+    and (optionally) live transcript context.
+    """
+    profile = payload.get("profile", {})
+    transcript_context = payload.get("transcript_context", "")
+
+    api_key = os.getenv("GROQ_API_KEY", "")
+    if not api_key or api_key == "your-groq-api-key-here":
+        return {"error": "GROQ_API_KEY not configured", "questions": []}
+
+    try:
+        from groq import Groq
+        client = Groq(api_key=api_key)
+
+        profile_text = json.dumps(profile, indent=2) if isinstance(profile, dict) else str(profile)
+
+        prompt = f"""You are a senior technical interviewer. Based on the candidate's resume and the interview transcript so far, generate 5 insightful follow-up questions that:
+1. Probe deeper into claimed skills and projects
+2. Test practical understanding (not just buzzwords)
+3. Identify potential gaps or inconsistencies
+4. Are specific, not generic
+
+Resume Profile:
+{profile_text}
+
+Transcript so far:
+{transcript_context if transcript_context else '(Interview has not started yet)'}
+
+Return ONLY a JSON array of objects, each with "question" and "category" (one of: "technical_depth", "project_experience", "skill_verification", "behavioral", "gap_analysis") fields. No other text."""
+
+        response = await asyncio.to_thread(
+            lambda: client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": "You are a senior technical interviewer generating probing follow-up questions."},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.4,
+                max_tokens=1000,
+            )
+        )
+
+        import re
+        raw = response.choices[0].message.content
+        match = re.search(r"\[.*\]", raw, re.DOTALL)
+        if match:
+            questions = json.loads(match.group(0))
+        else:
+            questions = [{"question": raw, "category": "general"}]
+
+        return {"status": "ok", "questions": questions}
+    except Exception as e:
+        print(f"[resume/questions] Error: {e}")
+        return {"error": str(e), "questions": []}
+
+
+# ------------------------------------------------------------------ #
+# Consistency analysis
+# ------------------------------------------------------------------ #
+
+@app.post("/analyze/consistency")
+async def analyze_consistency(payload: dict):
+    """
+    Analyze consistency between what the candidate says in the interview
+    and what their resume claims.
+    """
+    profile = payload.get("profile", {})
+    transcript = payload.get("transcript", "")
+
+    if not transcript:
+        return {"error": "No transcript provided", "analysis": []}
+
+    api_key = os.getenv("GROQ_API_KEY", "")
+    if not api_key or api_key == "your-groq-api-key-here":
+        return {"error": "GROQ_API_KEY not configured", "analysis": []}
+
+    try:
+        from groq import Groq
+        client = Groq(api_key=api_key)
+
+        profile_text = json.dumps(profile, indent=2) if isinstance(profile, dict) else str(profile)
+
+        prompt = f"""You are an interview analysis AI. Compare the candidate's interview responses against their resume to identify:
+1. Verified claims — statements that align with or confirm resume content
+2. Inconsistencies — contradictions between spoken answers and resume
+3. Depth indicators — does the candidate show genuine understanding or just surface knowledge?
+4. Red flags — vague answers, topic avoidance, contradictory timelines
+
+Resume Profile:
+{profile_text}
+
+Interview Transcript:
+{transcript}
+
+Return ONLY a JSON array of objects, each with:
+- "claim": the specific claim or statement being analyzed
+- "status": one of "verified", "inconsistent", "unverifiable", "red_flag"
+- "confidence": 0-100 score
+- "explanation": brief explanation
+- "source": "resume" or "transcript"
+
+No other text."""
+
+        response = await asyncio.to_thread(
+            lambda: client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": "You are an interview consistency analysis engine."},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.2,
+                max_tokens=2000,
+            )
+        )
+
+        import re
+        raw = response.choices[0].message.content
+        match = re.search(r"\[.*\]", raw, re.DOTALL)
+        if match:
+            analysis = json.loads(match.group(0))
+        else:
+            analysis = []
+
+        # Compute overall score
+        if analysis:
+            verified = sum(1 for a in analysis if a.get("status") == "verified")
+            total = len(analysis)
+            overall_score = round((verified / total) * 100)
+        else:
+            overall_score = 0
+
+        return {
+            "status": "ok",
+            "analysis": analysis,
+            "overall_score": overall_score,
+            "total_claims": len(analysis),
+        }
+    except Exception as e:
+        print(f"[analyze/consistency] Error: {e}")
+        return {"error": str(e), "analysis": []}
+

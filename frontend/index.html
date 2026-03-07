@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InterviewIQ — AI-Powered Interview Intelligence Platform</title>
+  <meta name="description" content="Enterprise-grade interview analysis platform with real-time transcription, AI resume parsing, intelligent follow-up questions, and candidate credibility scoring." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+  <!-- ===== LANDING / HOMEPAGE ===== -->
+  <div id="landing-page" class="landing-page">
+    <!-- Nav -->
+    <nav class="landing-nav">
+      <div class="landing-logo">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#00D4AA" stroke-width="2"/><path d="M12 16l4-6 4 6-4 6z" fill="#00D4AA"/></svg>
+        <span class="landing-logo-text">InterviewIQ</span>
+      </div>
+      <div class="landing-nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#tech">Tech Stack</a>
+      </div>
+      <button class="btn btn-primary btn-sm" id="landing-cta-nav">Launch Dashboard</button>
+    </nav>
+
+    <!-- Hero -->
+    <section class="landing-hero">
+      <div class="hero-glow"></div>
+      <div class="hero-arc"></div>
+      <div class="hero-content">
+        <div class="hero-badge">AI-POWERED INTERVIEW INTELLIGENCE</div>
+        <h1 class="hero-title">
+          Decode every interview.<br/>
+          <span class="hero-gradient-text">Remain unbiased.</span>
+        </h1>
+        <p class="hero-subtitle">
+          Real-time transcription, AI-driven resume analysis, intelligent follow-up questions,
+          and candidate credibility scoring — all in one platform.
+        </p>
+        <div class="hero-ctas">
+          <button class="btn btn-gradient btn-lg" id="landing-cta-hero">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Open Dashboard
+          </button>
+          <a class="btn btn-outline btn-lg" href="https://github.com/Kevinjose102/interview-intelligence-agent" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            View Source
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="landing-section" id="features">
+      <div class="section-header">
+        <h2>Core Capabilities</h2>
+        <p>Four pillars of interview intelligence, working in harmony.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-teal">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <h3>Resume Intelligence</h3>
+          <p>Upload a PDF resume and instantly extract skills, projects, and experience using LLM-powered parsing.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-cyan">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+          </div>
+          <h3>Live Transcription</h3>
+          <p>Real-time speech-to-text via Deepgram, streaming every word from the interview directly to your dashboard.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-purple">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3>Smart Follow-ups</h3>
+          <p>AI generates probing questions based on what was said vs. what the resume claims. Never miss a gap.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-amber">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3>Credibility Scoring</h3>
+          <p>Cross-reference transcript claims against the resume to score candidate credibility and flag inconsistencies.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="landing-section" id="how-it-works">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>Three simple steps to AI-powered interview intelligence.</p>
+      </div>
+      <div class="steps-row">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <h3>Upload Resume</h3>
+          <p>Drop a candidate's PDF resume. Our AI extracts skills, projects, and experience in seconds.</p>
+        </div>
+        <div class="step-connector">
+          <svg width="40" height="2"><line x1="0" y1="1" x2="40" y2="1" stroke="#00D4AA" stroke-width="2" stroke-dasharray="6 4"/></svg>
+        </div>
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <h3>Start Interview</h3>
+          <p>Use the Chrome extension to capture audio. Deepgram transcribes in real-time via WebSocket.</p>
+        </div>
+        <div class="step-connector">
+          <svg width="40" height="2"><line x1="0" y1="1" x2="40" y2="1" stroke="#00D4AA" stroke-width="2" stroke-dasharray="6 4"/></svg>
+        </div>
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <h3>Get Insights</h3>
+          <p>AI generates follow-up questions, consistency reports, and credibility scores automatically.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="landing-section" id="tech">
+      <div class="section-header">
+        <h2>Built With Modern Tech</h2>
+        <p>Enterprise-grade architecture from day one.</p>
+      </div>
+      <div class="tech-row">
+        <div class="tech-pill">FastAPI</div>
+        <div class="tech-pill">Deepgram STT</div>
+        <div class="tech-pill">Groq (Llama 3.3)</div>
+        <div class="tech-pill">OpenRouter</div>
+        <div class="tech-pill">Vite</div>
+        <div class="tech-pill">WebSockets</div>
+        <div class="tech-pill">Server-Sent Events</div>
+        <div class="tech-pill">Chrome Extension</div>
+      </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="landing-footer-cta">
+      <h2>Ready to transform your interviews?</h2>
+      <p>Open the dashboard and start analyzing in seconds.</p>
+      <button class="btn btn-gradient btn-lg" id="landing-cta-footer">Launch Dashboard →</button>
+    </section>
+
+    <footer class="landing-footer">
+      <span>InterviewIQ v1.0.0</span>
+      <span>·</span>
+      <a href="https://github.com/Kevinjose102/interview-intelligence-agent" target="_blank">GitHub</a>
+    </footer>
+  </div>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside id="sidebar">
+    <div class="sidebar-top">
+      <div class="logo">
+        <div class="logo-mark">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="url(#logo-grad)"/>
+            <path d="M10 16.5L14.5 21L22 11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs><linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="logo-name">InterviewIQ</span>
+          <span class="logo-sub">Intelligence Platform</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <button class="nav-item active" data-panel="dashboard" id="nav-dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-panel="resume" id="nav-resume">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Resume Analysis</span>
+      </button>
+      <button class="nav-item" data-panel="questions" id="nav-questions">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Follow-up Questions</span>
+      </button>
+
+      <div class="nav-section-label">Live</div>
+      <button class="nav-item" data-panel="transcript" id="nav-transcript">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        <span>Live Transcript</span>
+        <span class="nav-badge" id="nav-msg-count">0</span>
+      </button>
+      <button class="nav-item" data-panel="consistency" id="nav-consistency">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Consistency Check</span>
+      </button>
+
+      <div class="nav-section-label">System</div>
+      <button class="nav-item" data-panel="history" id="nav-history">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>Session History</span>
+      </button>
+      <button class="nav-item" data-panel="settings" id="nav-settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.2.65.65 1.16 1.24 1.41H21a2 2 0 0 1 0 4h-.09c-.59.25-1.04.76-1.24 1.41z"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="connection-status" id="connection-status">
+        <span class="conn-dot offline"></span>
+        <span class="conn-text" id="conn-text">Disconnected</span>
+      </div>
+      <div class="sidebar-version">v1.0 — Prototype</div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div id="main-wrapper">
+    <!-- TOP BAR -->
+    <header id="topbar">
+      <div class="topbar-left">
+        <button id="sidebar-toggle" class="topbar-icon-btn" title="Toggle sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="topbar-breadcrumb">
+          <span id="breadcrumb-page">Dashboard</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="live-indicator" id="live-indicator">
+          <span class="live-dot"></span>
+          <span id="live-text">Offline</span>
+        </div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-clock" id="topbar-clock"></div>
+      </div>
+    </header>
+
+    <!-- CONTENT AREA -->
+    <main id="content">
+
+      <!-- ===== DASHBOARD VIEW (default) ===== -->
+      <div class="view active" id="view-dashboard">
+        <!-- Stats row -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-blue">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-resume">—</span>
+              <span class="stat-label">Resume Status</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-purple">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-questions">0</span>
+              <span class="stat-label">Questions Ready</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-emerald">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-messages">0</span>
+              <span class="stat-label">Transcript Turns</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-amber">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-score">—</span>
+              <span class="stat-label">Credibility Score</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-column dashboard grid -->
+        <div class="dash-grid">
+          <!-- Mini Resume Card -->
+          <div class="dash-card dash-card-lg">
+            <div class="dash-card-header">
+              <h3>Resume Overview</h3>
+              <button class="chip-btn" onclick="document.getElementById('nav-resume').click()">View Full →</button>
+            </div>
+            <div class="dash-card-body" id="dash-resume-preview">
+              <div class="dash-empty">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <p>No resume uploaded yet</p>
+                <button class="btn btn-primary btn-sm" onclick="document.getElementById('nav-resume').click()">Upload Resume</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini Transcript Card -->
+          <div class="dash-card dash-card-lg">
+            <div class="dash-card-header">
+              <h3>Recent Transcript</h3>
+              <button class="chip-btn" onclick="document.getElementById('nav-transcript').click()">View Full →</button>
+            </div>
+            <div class="dash-card-body" id="dash-transcript-preview">
+              <div class="dash-empty">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+                <p>No live transcript yet</p>
+                <span class="text-xs text-muted">Connect via Chrome extension</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini Questions Card -->
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <h3>Top Questions</h3>
+              <button class="chip-btn" onclick="document.getElementById('nav-questions').click()">View All →</button>
+            </div>
+            <div class="dash-card-body" id="dash-questions-preview">
+              <div class="dash-empty">
+                <p class="text-muted text-sm">Generate questions after uploading a resume</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini Consistency Card -->
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <h3>Credibility</h3>
+              <button class="chip-btn" onclick="document.getElementById('nav-consistency').click()">Full Report →</button>
+            </div>
+            <div class="dash-card-body" id="dash-consistency-preview">
+              <div class="dash-empty">
+                <p class="text-muted text-sm">Run consistency check after interview starts</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== RESUME VIEW ===== -->
+      <div class="view" id="view-resume">
+        <div class="view-header">
+          <div>
+            <h1>Resume Analysis</h1>
+            <p class="view-subtitle">Upload a candidate's resume to extract skills, projects, and experience with AI</p>
+          </div>
+          <span class="status-pill" id="resume-pill">No File</span>
+        </div>
+
+        <div class="content-split">
+          <!-- Left: Upload & raw -->
+          <div class="content-col">
+            <div class="card card-upload" id="upload-card">
+              <div id="upload-zone" class="upload-zone">
+                <div class="upload-zone-inner">
+                  <div class="upload-anim-ring"></div>
+                  <svg class="upload-hero-icon" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <h3 class="upload-title">Drop your resume here</h3>
+                  <p class="upload-sub">PDF format · Max 10MB</p>
+                  <button class="btn btn-primary" id="upload-browse-btn">Browse Files</button>
+                  <input type="file" id="resume-file-input" accept=".pdf" hidden />
+                </div>
+              </div>
+            </div>
+            <!-- Loading -->
+            <div class="card hidden" id="resume-loading-card">
+              <div class="loading-hero">
+                <div class="loading-rings">
+                  <div class="ring ring-1"></div>
+                  <div class="ring ring-2"></div>
+                  <div class="ring ring-3"></div>
+                </div>
+                <h3>Analyzing Resume</h3>
+                <p class="text-muted">Extracting structured data with AI...</p>
+                <div class="progress-bar"><div class="progress-bar-fill" id="resume-progress"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Parsed content -->
+          <div class="content-col" id="resume-results-col">
+            <div class="card hidden" id="resume-skills-card">
+              <div class="card-header">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <h3>Skills</h3>
+                <span class="count-badge" id="skill-count">0</span>
+              </div>
+              <div class="card-body">
+                <div id="resume-skills" class="tag-cloud"></div>
+              </div>
+            </div>
+
+            <div class="card hidden" id="resume-projects-card">
+              <div class="card-header">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <h3>Projects</h3>
+                <span class="count-badge" id="project-count">0</span>
+              </div>
+              <div class="card-body" id="resume-projects"></div>
+            </div>
+
+            <div class="card hidden" id="resume-exp-card">
+              <div class="card-header">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                <h3>Experience</h3>
+                <span class="count-badge" id="exp-count">0</span>
+              </div>
+              <div class="card-body" id="resume-experience"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== QUESTIONS VIEW ===== -->
+      <div class="view" id="view-questions">
+        <div class="view-header">
+          <div>
+            <h1>Follow-up Questions</h1>
+            <p class="view-subtitle">AI-generated probing questions tailored to the candidate's resume and interview context</p>
+          </div>
+          <button class="btn btn-primary" id="btn-generate-questions" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Generate Questions
+          </button>
+        </div>
+
+        <div id="questions-empty" class="empty-hero">
+          <div class="empty-hero-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h2>No Questions Generated Yet</h2>
+          <p>Upload a resume first, then click <strong>Generate Questions</strong> to create targeted interview follow-ups</p>
+        </div>
+
+        <div id="questions-loading" class="loading-hero hidden">
+          <div class="loading-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
+          <h3>Generating Intelligent Questions</h3>
+          <p class="text-muted">Analyzing resume and transcript with LLM...</p>
+        </div>
+
+        <div id="questions-grid" class="questions-grid hidden"></div>
+      </div>
+
+      <!-- ===== TRANSCRIPT VIEW ===== -->
+      <div class="view" id="view-transcript">
+        <div class="view-header">
+          <div>
+            <h1>Live Transcript</h1>
+            <p class="view-subtitle">Real-time interview transcription via Deepgram speech-to-text</p>
+          </div>
+          <div class="transcript-header-actions">
+            <span class="msg-counter" id="msg-count-label">0 turns</span>
+            <button class="btn btn-outline btn-sm" id="btn-export-transcript" disabled>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export
+            </button>
+            <button class="btn btn-outline btn-sm" id="btn-scroll-bottom">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              Scroll to Bottom
+            </button>
+          </div>
+        </div>
+
+        <div id="transcript-empty" class="empty-hero">
+          <div class="empty-hero-icon">
+            <div class="mic-anim">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              <div class="mic-pulse"></div>
+            </div>
+          </div>
+          <h2>Waiting for Audio Stream</h2>
+          <p>Connect your Google Meet session via the Chrome extension to begin real-time transcription</p>
+          <div class="steps-mini">
+            <div class="step-mini"><span class="step-num">1</span> Install Chrome extension</div>
+            <div class="step-mini"><span class="step-num">2</span> Join a Google Meet call</div>
+            <div class="step-mini"><span class="step-num">3</span> Click "Start Recording" in extension</div>
+          </div>
+        </div>
+
+        <div id="transcript-feed" class="transcript-feed hidden"></div>
+      </div>
+
+      <!-- ===== CONSISTENCY VIEW ===== -->
+      <div class="view" id="view-consistency">
+        <div class="view-header">
+          <div>
+            <h1>Consistency Analysis</h1>
+            <p class="view-subtitle">Cross-reference candidate statements against resume claims for credibility scoring</p>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-outline btn-sm" id="btn-export-report" disabled>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Report
+            </button>
+            <button class="btn btn-gradient" id="btn-analyze" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Run Analysis
+            </button>
+          </div>
+        </div>
+
+        <div id="consistency-empty" class="empty-hero">
+          <div class="empty-hero-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h2>No Analysis Available</h2>
+          <p>Upload a resume and start an interview to enable consistency checking between claims and responses</p>
+        </div>
+
+        <div id="consistency-loading" class="loading-hero hidden">
+          <div class="loading-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
+          <h3>Running Deep Analysis</h3>
+          <p class="text-muted">Cross-referencing transcript against resume...</p>
+        </div>
+
+        <div id="consistency-results" class="hidden">
+          <!-- Score hero -->
+          <div class="score-hero" id="score-hero"></div>
+          <!-- Claims breakdown -->
+          <div class="claims-grid" id="claims-grid"></div>
+        </div>
+      </div>
+
+      <!-- ===== HISTORY VIEW ===== -->
+      <div class="view" id="view-history">
+        <div class="view-header">
+          <div>
+            <h1>Session History</h1>
+            <p class="view-subtitle">Review past interview sessions, transcripts, and analysis reports</p>
+          </div>
+        </div>
+        <div id="history-list" class="history-list">
+          <div id="history-empty" class="empty-hero">
+            <div class="empty-hero-icon">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h2>No Past Sessions</h2>
+            <p>Interview sessions will appear here once completed. Start your first interview to begin building history.</p>
+          </div>
+          <div id="history-cards" class="history-cards hidden"></div>
+        </div>
+      </div>
+
+      <!-- ===== SETTINGS VIEW ===== -->
+      <div class="view" id="view-settings">
+        <div class="view-header">
+          <div>
+            <h1>Settings</h1>
+            <p class="view-subtitle">Configure your InterviewIQ platform preferences</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <!-- Connection Settings -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              <h3>Connection</h3>
+            </div>
+            <div class="settings-card">
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Backend URL</span>
+                  <span class="setting-desc">FastAPI server endpoint</span>
+                </div>
+                <input type="text" class="setting-input" value="http://localhost:8000" id="setting-backend-url" readonly />
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">SSE Status</span>
+                  <span class="setting-desc">Real-time event stream connection</span>
+                </div>
+                <span class="status-pill" id="setting-sse-status">Disconnected</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- API Configuration -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <h3>API Keys</h3>
+            </div>
+            <div class="settings-card">
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Groq API</span>
+                  <span class="setting-desc">Powers AI question generation &amp; consistency analysis</span>
+                </div>
+                <span class="status-pill" id="setting-groq-status">Server-side</span>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Deepgram API</span>
+                  <span class="setting-desc">Powers real-time speech-to-text transcription</span>
+                </div>
+                <span class="status-pill" id="setting-deepgram-status">Server-side</span>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">OpenRouter API</span>
+                  <span class="setting-desc">Powers resume parsing via LLM</span>
+                </div>
+                <span class="status-pill" id="setting-openrouter-status">Server-side</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- About -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <h3>About</h3>
+            </div>
+            <div class="settings-card">
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">InterviewIQ</span>
+                  <span class="setting-desc">AI-Powered Interview Intelligence Platform</span>
+                </div>
+                <span class="status-pill">v1.0.0</span>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Stack</span>
+                  <span class="setting-desc">FastAPI · Deepgram · Groq (Llama 3.3) · Vite · Vanilla JS</span>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Architecture</span>
+                  <span class="setting-desc">Chrome Extension → WebSocket → Deepgram STT → Conversation Manager → Dashboard</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Keyboard Shortcuts -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/></svg>
+              <h3>Keyboard Shortcuts</h3>
+            </div>
+            <div class="settings-card">
+              <div class="setting-row">
+                <span class="setting-label">Toggle Sidebar</span>
+                <kbd class="kbd">Ctrl + B</kbd>
+              </div>
+              <div class="setting-row">
+                <span class="setting-label">Dashboard</span>
+                <kbd class="kbd">Ctrl + 1</kbd>
+              </div>
+              <div class="setting-row">
+                <span class="setting-label">Resume Analysis</span>
+                <kbd class="kbd">Ctrl + 2</kbd>
+              </div>
+              <div class="setting-row">
+                <span class="setting-label">Live Transcript</span>
+                <kbd class="kbd">Ctrl + 4</kbd>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
