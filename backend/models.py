@@ -3,7 +3,8 @@ models.py — Pydantic models for transcript and conversation data
 """
 
 from pydantic import BaseModel
-
+from typing import Optional
+from pydantic import Field
 
 class TranscriptChunk(BaseModel):
     speaker: str  # "candidate" or "interviewer"
@@ -32,9 +33,9 @@ class Conversation(BaseModel):
     """Full conversation for a session."""
     session_id: str
     start_time: float
-    end_time: float | None = None
-    status: str = "active"  # "active" or "ended"
-    messages: list[ConversationMessage] = []
+    end_time: Optional[float] = None
+    status: str = "active"
+    messages: list[ConversationMessage] = Field(default_factory=list)
     duration: float = 0.0
 
     def to_summary(self) -> "ConversationSummary":
