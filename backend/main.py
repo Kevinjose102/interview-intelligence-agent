@@ -147,35 +147,45 @@ async def end_conversation(session_id: str):
 
 
 # ------------------------------------------------------------------ #
-# Summary endpoint (Gemini-powered)
+# Summary endpoint (Groq-powered)
 # ------------------------------------------------------------------ #
 
-async def _generate_gemini_summary(transcript_text: str) -> str | None:
-    """Use Gemini to generate an intelligent interview summary."""
-    api_key = os.getenv("GEMINI_API_KEY", "")
-    if not api_key or api_key == "your-gemini-api-key-here":
+async def _generate_groq_summary(transcript_text: str) -> str | None:
+    """Use Groq (Llama 3) to generate an intelligent interview summary."""
+    api_key = os.getenv("GROQ_API_KEY", "")
+    if not api_key or api_key == "your-groq-api-key-here":
         return None
 
     try:
-        import google.generativeai as genai
+        from groq import Groq
 
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-2.0-flash")
-
-        prompt = (
-            "You are an interview analysis assistant. "
-            "Summarize the following interview conversation in 3-5 sentences. "
-            "Focus on: what topics were discussed, key points made by the candidate, "
-            "and any notable observations.\n\n"
-            f"Transcript:\n{transcript_text}"
-        )
+        client = Groq(api_key=api_key)
 
         response = await asyncio.to_thread(
-            lambda: model.generate_content(prompt)
+            lambda: client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are an interview analysis assistant. "
+                            "Summarize the interview conversation in 3-5 sentences. "
+                            "Focus on: topics discussed, key points by the candidate, "
+                            "and notable observations."
+                        ),
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Transcript:\n{transcript_text}",
+                    },
+                ],
+                temperature=0.3,
+                max_tokens=500,
+            )
         )
-        return response.text
+        return response.choices[0].message.content
     except Exception as e:
-        print(f"[summary] Gemini error: {e}")
+        print(f"[summary] Groq error: {e}")
         return None
 
 
@@ -183,7 +193,7 @@ async def _generate_gemini_summary(transcript_text: str) -> str | None:
 async def get_summary():
     """
     Return a summary of the most recent conversation:
-    - summary: AI-generated summary via Gemini (falls back to raw transcript)
+    - summary: AI-generated summary via Groq (falls back to raw transcript)
     - last_4_messages: the 4 most recent speaker turns
     - latest_message: the single latest speaker turn
     - stats: message count, duration, speakers
@@ -216,8 +226,8 @@ async def get_summary():
         transcript_lines.append(f"{msg.speaker.upper()}: {msg.text}")
     raw_transcript = "\n".join(transcript_lines)
 
-    # Generate AI summary via Gemini (falls back to raw transcript)
-    ai_summary = await _generate_gemini_summary(raw_transcript)
+    # Generate AI summary via Groq (falls back to raw transcript)
+    ai_summary = await _generate_groq_summary(raw_transcript)
 
     # Count per-speaker stats
     speaker_counts: dict[str, int] = {}
@@ -239,7 +249,8 @@ async def get_summary():
             "speakers": speaker_counts,
         },
         "summary": ai_summary if ai_summary else raw_transcript,
-        "summary_source": "gemini" if ai_summary else "raw_transcript",
+        "summary_source": "groq" if ai_summary else "raw_transcript",
         "last_4_messages": last_4,
         "latest_message": latest,
     }
+
