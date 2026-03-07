@@ -6,6 +6,7 @@ import {
   uploadResume,
   generateQuestions,
   analyzeConsistency,
+  analyzeLatest,
   subscribeSSE,
   getConversations,
   getConversation,
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initKeyboardShortcuts();
   initSSE();
   loadExistingConversations();
+  startAnalyzeLatestPolling();
 });
 
 /* ================================================================
@@ -597,6 +599,61 @@ function updateDashboardQuestionsPreview(questions) {
       ${esc(q.question.substring(0, 80))}${q.question.length > 80 ? '...' : ''}
     </div>`
   ).join('');
+}
+
+/* ================================================================
+   ANALYZE LATEST — 10-SECOND POLLING
+   ================================================================ */
+let _lastAnalysisJSON = '';
+
+function startAnalyzeLatestPolling() {
+  // Initial call after a short delay to let backend warm up
+  setTimeout(pollAnalyzeLatest, 3000);
+  // Then every 10 seconds
+  setInterval(pollAnalyzeLatest, 10000);
+}
+
+async function pollAnalyzeLatest() {
+  try {
+    const result = await analyzeLatest();
+
+    // Skip if error or no analysis
+    if (result.error || !result.analysis) return;
+
+    const analysis = result.analysis;
+    const questions = analysis.follow_up_questions || [];
+    if (questions.length === 0) return;
+
+    // Skip if nothing changed (avoid unnecessary re-renders)
+    const newJSON = JSON.stringify(questions);
+    if (newJSON === _lastAnalysisJSON) return;
+    _lastAnalysisJSON = newJSON;
+
+    // Convert plain strings to {question, category} format
+    const formatted = questions.map((q) => ({
+      question: typeof q === 'string' ? q : q.question || String(q),
+      category: typeof q === 'object' && q.category ? q.category : 'ai_analysis',
+    }));
+
+    // Update state and render
+    state.questionsData = formatted;
+    renderQuestions(formatted);
+    updateDashboardQuestionsPreview(formatted);
+    $('#stat-questions').textContent = formatted.length;
+
+    // Also update quality score if available
+    if (analysis.answer_quality_score > 0) {
+      const score = analysis.answer_quality_score;
+      $('#stat-score').textContent = `${score}%`;
+      $('#stat-score').style.color =
+        score >= 70 ? 'var(--emerald)' : score >= 40 ? 'var(--amber)' : 'var(--rose)';
+    }
+
+    console.log(`[analyze_latest] Updated ${formatted.length} follow-up questions`);
+  } catch (err) {
+    // Silently ignore polling errors (backend may not have data yet)
+    console.debug('[analyze_latest] Poll error:', err.message);
+  }
 }
 
 /* ================================================================
