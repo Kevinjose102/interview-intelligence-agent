@@ -61,15 +61,17 @@ async def audio_stream(websocket: WebSocket, speaker: str):
             DEEPGRAM_WS_URL,
             additional_headers=additional_headers,
             open_timeout=30,
+            ping_interval=None,  # Disable default pings — Deepgram doesn't respond to them
         )
         print(f"[audio_stream] Deepgram connected for {speaker}")
 
-        # Run two concurrent tasks
+        # Run three concurrent tasks (including Deepgram KeepAlive)
         await asyncio.gather(
             _receive_from_extension(websocket, deepgram_ws, pending_metadata),
             _receive_from_deepgram(
                 deepgram_ws, websocket, speaker, session_id, pending_metadata
             ),
+            _deepgram_keepalive(deepgram_ws),
         )
 
     except WebSocketDisconnect:
@@ -90,6 +92,15 @@ async def audio_stream(websocket: WebSocket, speaker: str):
         print(f"[audio_stream] Connection closed: speaker={speaker}, session={session_id}")
 
 
+async def _deepgram_keepalive(dg_ws) -> None:
+    """Send Deepgram-specific KeepAlive messages every 8 seconds."""
+    try:
+        while True:
+            await asyncio.sleep(8)
+            await dg_ws.send(json.dumps({"type": "KeepAlive"}))
+    except Exception:
+        pass  # Connection closed — exit silently
+
 async def _receive_from_extension(
     ext_ws: WebSocket,
     dg_ws: websockets.WebSocketClientProtocol,
@@ -100,6 +111,7 @@ async def _receive_from_extension(
     - Text frames → parse as JSON metadata
     - Binary frames → forward to Deepgram
     """
+    chunk_count = 0
     try:
         while True:
             data = await ext_ws.receive()
@@ -112,6 +124,9 @@ async def _receive_from_extension(
 
             elif "bytes" in data and data["bytes"]:
                 # Binary audio chunk → forward to Deepgram
+                chunk_count += 1
+                if chunk_count <= 3 or chunk_count % 20 == 0:
+                    print(f"[receive_from_extension] Forwarding chunk #{chunk_count} ({len(data['bytes'])} bytes) for {pending_metadata['speaker']}")
                 await dg_ws.send(data["bytes"])
 
     except WebSocketDisconnect:
@@ -151,6 +166,11 @@ async def _receive_from_deepgram(
             try:
                 # Extract transcript data from Deepgram response
                 channel = result["channel"]
+
+                # channel must be a dict (Deepgram sometimes sends other types)
+                if not isinstance(channel, dict):
+                    continue
+
                 alternatives = channel.get("alternatives", [])
 
                 if not alternatives:
@@ -173,7 +193,7 @@ async def _receive_from_deepgram(
                     )
 
                     await transcript_handler.handle_transcript(chunk)
-            except (KeyError, TypeError, IndexError) as parse_err:
+            except (KeyError, TypeError, IndexError, AttributeError) as parse_err:
                 print(f"[receive_from_deepgram] Parse error: {parse_err}")
                 continue
 

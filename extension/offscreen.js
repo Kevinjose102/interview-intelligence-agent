@@ -70,8 +70,10 @@ async function startRecording(streamId) {
     const monoMicStream = forceMonoStream(micStream, "mic");
 
     // Open WebSocket connections
-    tabWs = createWebSocket("interviewer");
-    micWs = createWebSocket("candidate");
+    // Tab audio = other person on call (candidate)
+    // Mic audio = you, the interviewer
+    tabWs = createWebSocket("candidate");
+    micWs = createWebSocket("interviewer");
 
     // Wait for both WebSockets to open
     await Promise.all([
@@ -82,8 +84,8 @@ async function startRecording(streamId) {
     sendStatus("capturing", "Recording in progress...");
 
     // Create MediaRecorders with opus codec
-    tabRecorder = createRecorder(monoTabStream, tabWs, "interviewer");
-    micRecorder = createRecorder(monoMicStream, micWs, "candidate");
+    tabRecorder = createRecorder(monoTabStream, tabWs, "candidate");
+    micRecorder = createRecorder(monoMicStream, micWs, "interviewer");
 
     // Start recording with 250ms chunks
     tabRecorder.start(RECORDER_TIMESLICE_MS);
