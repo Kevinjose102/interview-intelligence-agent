@@ -380,8 +380,16 @@ async def upload_resume(file: UploadFile = File(...)):
         # Run pipeline (sync — runs in thread to avoid blocking)
         from resume_intelligence.pipeline import process_resume
         from resume_intelligence.resume_analyzer import analyze_resume
+        from resume_intelligence.resume_parser import extract_links
+        from resume_intelligence.github_verifier import extract_github_username
         profile, raw_text = await asyncio.to_thread(process_resume, tmp_path)
         profile_dict = profile.model_dump() if hasattr(profile, "model_dump") else profile.dict()
+
+        # Extract GitHub URL from resume
+        links = extract_links(tmp_path)
+        github_username = extract_github_username(links)
+        profile_dict["github_username"] = github_username
+        profile_dict["github_links"] = [l for l in links if "github.com" in l]
 
         # Run deep analysis (async — uses Groq)
         deep_analysis = await analyze_resume(raw_text, profile_dict)
@@ -663,3 +671,34 @@ Return ONLY valid JSON, no markdown, no explanation."""
     except Exception as e:
         print(f"[post_interview] Error: {e}")
         return {"error": str(e)}
+
+
+# ------------------------------------------------------------------ #
+# GitHub Project Verification
+# ------------------------------------------------------------------ #
+
+@app.post("/verify/github")
+async def verify_github(payload: dict):
+    """
+    Verify candidate projects by checking their GitHub repos and commit history.
+    Accepts: {profile, transcript, github_username}
+    Returns per-project verification with legitimacy scores.
+    """
+    profile = payload.get("profile", {})
+    transcript = payload.get("transcript", "")
+    github_username = payload.get("github_username") or profile.get("github_username")
+
+    if not github_username:
+        return {"error": "No GitHub username found. Upload a resume with a GitHub link first.", "projects": []}
+
+    projects = profile.get("projects", [])
+    if not projects:
+        return {"error": "No projects found in resume profile", "projects": []}
+
+    try:
+        from resume_intelligence.github_verifier import verify_projects
+        result = await verify_projects(projects, github_username, transcript)
+        return {"status": "ok", **result}
+    except Exception as e:
+        print(f"[verify/github] Error: {e}")
+        return {"error": str(e), "projects": []}

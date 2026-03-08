@@ -264,6 +264,10 @@
         </svg>
         <span>Consistency Check</span>
       </button>
+      <button class="nav-item" data-panel="github" id="nav-github">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        <span>GitHub Verify</span>
+      </button>
 
       <div class="nav-section-label">Reports</div>
       <button class="nav-item" data-panel="report" id="nav-report">
@@ -818,6 +822,39 @@
           <div class="score-hero" id="score-hero"></div>
           <!-- Claims breakdown -->
           <div class="claims-grid" id="claims-grid"></div>
+        </div>
+      </div>
+
+      <!-- ===== GITHUB VERIFICATION VIEW ===== -->
+      <div class="view" id="view-github">
+        <div class="view-header">
+          <div>
+            <h1>GitHub Verification</h1>
+            <p class="view-subtitle">Verify candidate projects by checking GitHub repos, commit history, and work legitimacy</p>
+          </div>
+          <button class="btn btn-gradient" id="btn-verify-github" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Verify Projects
+          </button>
+        </div>
+
+        <div id="github-empty" class="empty-hero">
+          <div class="empty-hero-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </div>
+          <h2>No Verification Yet</h2>
+          <p>Upload a resume with a GitHub link, then click <strong>Verify Projects</strong> to check repo ownership and commit legitimacy</p>
+        </div>
+
+        <div id="github-loading" class="loading-hero hidden">
+          <div class="loading-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
+          <h3>Verifying GitHub Projects</h3>
+          <p class="text-muted">Fetching repos, analyzing commit history…</p>
+        </div>
+
+        <div id="github-results" class="hidden">
+          <div id="github-summary" class="score-hero"></div>
+          <div id="github-projects-grid" class="claims-grid"></div>
         </div>
       </div>
 

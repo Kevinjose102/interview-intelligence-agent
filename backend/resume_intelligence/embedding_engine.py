@@ -17,7 +17,7 @@ def generate_embeddings(resume_profile):
     for project in resume_profile.projects:
         text_chunks.append(project.name)
         text_chunks.append(project.description)
-
+-
     embeddings = []
 
     for chunk in text_chunks:

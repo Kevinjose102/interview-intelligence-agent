@@ -8,6 +8,7 @@ import {
   analyzeConsistency,
   analyzeLatest,
   postInterviewAnalysis,
+  verifyGitHub,
   subscribeSSE,
   getConversations,
   getConversation,
@@ -95,6 +96,7 @@ function switchView(viewId) {
     transcript: 'Live Transcript',
     consistency: 'Consistency Analysis',
     report: 'Post-Interview Report',
+    github: 'GitHub Verification',
     history: 'Session History',
     settings: 'Settings',
   };
@@ -192,6 +194,7 @@ async function handleResumeUpload(file) {
 
     // Enable dependent buttons
     $('#btn-generate-questions').disabled = false;
+    $('#btn-verify-github').disabled = false;
     updateAnalyzeButton();
 
     // Update stats
@@ -476,6 +479,7 @@ function renderDeepAnalysis(analysis) {
 function initButtons() {
   $('#btn-generate-questions').addEventListener('click', handleGenerateQuestions);
   $('#btn-analyze').addEventListener('click', handleAnalyze);
+  $('#btn-verify-github').addEventListener('click', handleVerifyGitHub);
   $('#btn-scroll-bottom').addEventListener('click', () => {
     const feed = $('#transcript-feed');
     feed.scrollTop = feed.scrollHeight;
@@ -604,6 +608,128 @@ function updateDashboardQuestionsPreview(questions) {
       ${esc(q.question.substring(0, 80))}${q.question.length > 80 ? '...' : ''}
     </div>`
   ).join('');
+}
+
+/* ================================================================
+   GITHUB VERIFICATION
+   ================================================================ */
+async function handleVerifyGitHub() {
+  if (!state.resumeProfile) return;
+  const btn = $('#btn-verify-github');
+  btn.disabled = true;
+
+  $('#github-empty').classList.add('hidden');
+  $('#github-results').classList.add('hidden');
+  $('#github-loading').classList.remove('hidden');
+
+  try {
+    const transcript = state.transcriptMessages
+      .map((m) => `${m.speaker.toUpperCase()}: ${m.text}`)
+      .join('\n');
+    const result = await verifyGitHub(state.resumeProfile, transcript);
+
+    if (result.error && !result.projects?.length) throw new Error(result.error);
+
+    renderGitHubResults(result);
+    showToast(`Verified ${(result.projects || []).length} projects`, 'success');
+  } catch (err) {
+    showToast(`Verification failed: ${err.message}`, 'error');
+    $('#github-empty').classList.remove('hidden');
+  } finally {
+    $('#github-loading').classList.add('hidden');
+    btn.disabled = false;
+  }
+}
+
+function renderGitHubResults(result) {
+  const projects = result.projects || [];
+  const summary = $('#github-summary');
+  const grid = $('#github-projects-grid');
+
+  const verified = projects.filter((p) => p.verdict === 'verified' || p.verdict === 'repo_legitimate').length;
+  const notFound = projects.filter((p) => p.verdict === 'not_found').length;
+  const suspicious = projects.filter((p) => p.verdict === 'suspicious' || p.verdict === 'mentioned_but_suspicious').length;
+  const avgScore = projects.length
+    ? Math.round(projects.reduce((s, p) => s + (p.legitimacy_score || 0), 0) / projects.length)
+    : 0;
+
+  let scoreColor = 'var(--emerald)';
+  let scoreLabel = 'Projects Look Legitimate';
+  if (avgScore < 40) { scoreColor = 'var(--rose)'; scoreLabel = 'Suspicious Activity'; }
+  else if (avgScore < 70) { scoreColor = 'var(--amber)'; scoreLabel = 'Needs Review'; }
+
+  const circ = 2 * Math.PI * 42;
+  summary.innerHTML = `
+    <div class="score-ring-wrapper">
+      <svg width="100" height="100" viewBox="0 0 100 100">
+        <circle class="score-ring-bg" cx="50" cy="50" r="42"/>
+        <circle class="score-ring-fill" cx="50" cy="50" r="42"
+          stroke="${scoreColor}" stroke-dasharray="${circ}" stroke-dashoffset="${circ - (avgScore / 100) * circ}"/>
+      </svg>
+      <div class="score-ring-num" style="color:${scoreColor}">${avgScore}%</div>
+    </div>
+    <div class="score-info">
+      <div class="score-title">${scoreLabel}</div>
+      <div class="score-desc">
+        <a href="${result.github_profile_url || '#'}" target="_blank" style="color:var(--primary);font-weight:600">
+          @${esc(result.github_username || 'unknown')}
+        </a>
+        · ${result.repos_found || 0} public repos found
+      </div>
+      <div class="score-breakdown">
+        <div class="breakdown-item"><span class="breakdown-dot" style="background:var(--emerald)"></span> ${verified} verified</div>
+        <div class="breakdown-item"><span class="breakdown-dot" style="background:var(--rose)"></span> ${notFound} not found</div>
+        <div class="breakdown-item"><span class="breakdown-dot" style="background:var(--amber)"></span> ${suspicious} suspicious</div>
+      </div>
+    </div>`;
+
+  const verdictIcons = {
+    verified: '✓', repo_legitimate: '✓', not_found: '✗',
+    suspicious: '⚑', mentioned_but_suspicious: '⚑',
+    uncertain: '?', no_data: '—', mentioned_only: '◎',
+  };
+  const verdictColors = {
+    verified: 'var(--emerald)', repo_legitimate: 'var(--emerald)',
+    not_found: 'var(--rose)', suspicious: 'var(--rose)',
+    mentioned_but_suspicious: 'var(--amber)', uncertain: 'var(--amber)',
+    no_data: 'var(--text-3)', mentioned_only: 'var(--blue)',
+  };
+
+  grid.innerHTML = '';
+  projects.forEach((p, i) => {
+    const v = p.verdict || 'unknown';
+    const card = document.createElement('div');
+    card.className = 'claim-card';
+    card.style.animationDelay = `${i * 0.06}s`;
+
+    const repoLink = p.repo_url
+      ? `<a href="${p.repo_url}" target="_blank" style="color:var(--primary);font-size:0.78rem;text-decoration:none">${esc(p.github_repo)}</a>`
+      : '<span style="color:var(--text-3);font-size:0.78rem">No matching repo</span>';
+
+    const flags = (p.legitimacy_flags || []).map((f) =>
+      `<div style="font-size:0.75rem;color:var(--text-3);padding:2px 0">• ${esc(f)}</div>`
+    ).join('');
+
+    card.innerHTML = `
+      <div class="claim-header">
+        <span class="claim-status-icon" style="color:${verdictColors[v] || 'var(--text-3)'}">${verdictIcons[v] || '?'}</span>
+        <span class="claim-status-label" style="color:${verdictColors[v] || 'var(--text-3)'}">${v.replace(/_/g, ' ')}</span>
+        <span class="claim-confidence">${p.legitimacy_score || 0}%</span>
+      </div>
+      <div class="claim-text" style="font-weight:700">${esc(p.project_name)}</div>
+      <div style="margin:6px 0">${repoLink}</div>
+      <div style="display:flex;gap:16px;font-size:0.78rem;color:var(--text-2);margin:4px 0;flex-wrap:wrap">
+        <span>📝 ${p.commit_count || 0} commits</span>
+        <span>📅 ${p.time_span_days || 0} days span</span>
+        ${p.mentioned_in_transcript ? '<span style="color:var(--emerald)">🎤 Mentioned in interview</span>' : '<span style="color:var(--text-3)">🎤 Not mentioned</span>'}
+        ${p.repo_is_fork ? '<span style="color:var(--amber)">🔀 Fork</span>' : ''}
+        ${p.repo_language ? `<span>💻 ${esc(p.repo_language)}</span>` : ''}
+      </div>
+      <div style="margin-top:6px">${flags}</div>`;
+    grid.appendChild(card);
+  });
+
+  $('#github-results').classList.remove('hidden');
 }
 
 /* ================================================================

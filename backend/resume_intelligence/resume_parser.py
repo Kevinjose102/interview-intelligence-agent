@@ -31,3 +31,21 @@ def extract_text(file_path):
     text = clean_text(text)
 
     return text
+
+
+def extract_links(file_path):
+    """Extract all hyperlinks from PDF annotations."""
+    reader = PdfReader(file_path)
+    links = []
+
+    for page in reader.pages:
+        if "/Annots" in page:
+            annotations = page["/Annots"]
+            for annot in annotations:
+                obj = annot.get_object()
+                if obj.get("/Subtype") == "/Link":
+                    uri = obj.get("/A", {}).get("/URI")
+                    if uri:
+                        links.append(str(uri))
+
+    return links
