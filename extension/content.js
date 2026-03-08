@@ -256,6 +256,7 @@ function escapeHtml(s) {
 }
 
 // Boot
+console.log('[IIQ Overlay] Content script loaded on', window.location.href);
 createOverlay();
 pollQuestions();
 setInterval(pollQuestions, POLL_INTERVAL);

@@ -7,6 +7,8 @@ import {
   generateQuestions,
   analyzeConsistency,
   analyzeLatest,
+  postInterviewAnalysis,
+  verifyGitHub,
   subscribeSSE,
   getConversations,
   getConversation,
@@ -42,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initKeyboardShortcuts();
   initSSE();
   initSkillConfidence();
+  initReport();
   loadExistingConversations();
   initHealthCheck();
   startAnalyzeLatestPolling();
@@ -96,6 +99,8 @@ function switchView(viewId) {
     questions: 'Follow-up Questions',
     transcript: 'Live Transcript',
     consistency: 'Consistency Analysis',
+    report: 'Post-Interview Report',
+    github: 'GitHub Verification',
     history: 'Session History',
     settings: 'Settings',
   };
@@ -198,6 +203,7 @@ async function handleResumeUpload(file) {
 
     // Enable dependent buttons
     $('#btn-generate-questions').disabled = false;
+    $('#btn-verify-github').disabled = false;
     updateAnalyzeButton();
 
     // Update stats
@@ -665,6 +671,7 @@ async function handleGenerateSummary(record, btn) {
 function initButtons() {
   $('#btn-generate-questions').addEventListener('click', handleGenerateQuestions);
   $('#btn-analyze').addEventListener('click', handleAnalyze);
+  $('#btn-verify-github').addEventListener('click', handleVerifyGitHub);
   $('#btn-scroll-bottom').addEventListener('click', () => {
     const feed = $('#transcript-feed');
     feed.scrollTop = feed.scrollHeight;
@@ -793,6 +800,128 @@ function updateDashboardQuestionsPreview(questions) {
       ${esc(q.question.substring(0, 80))}${q.question.length > 80 ? '...' : ''}
     </div>`
   ).join('');
+}
+
+/* ================================================================
+   GITHUB VERIFICATION
+   ================================================================ */
+async function handleVerifyGitHub() {
+  if (!state.resumeProfile) return;
+  const btn = $('#btn-verify-github');
+  btn.disabled = true;
+
+  $('#github-empty').classList.add('hidden');
+  $('#github-results').classList.add('hidden');
+  $('#github-loading').classList.remove('hidden');
+
+  try {
+    const transcript = state.transcriptMessages
+      .map((m) => `${m.speaker.toUpperCase()}: ${m.text}`)
+      .join('\n');
+    const result = await verifyGitHub(state.resumeProfile, transcript);
+
+    if (result.error && !result.projects?.length) throw new Error(result.error);
+
+    renderGitHubResults(result);
+    showToast(`Verified ${(result.projects || []).length} projects`, 'success');
+  } catch (err) {
+    showToast(`Verification failed: ${err.message}`, 'error');
+    $('#github-empty').classList.remove('hidden');
+  } finally {
+    $('#github-loading').classList.add('hidden');
+    btn.disabled = false;
+  }
+}
+
+function renderGitHubResults(result) {
+  const projects = result.projects || [];
+  const summary = $('#github-summary');
+  const grid = $('#github-projects-grid');
+
+  const verified = projects.filter((p) => p.verdict === 'verified' || p.verdict === 'repo_legitimate').length;
+  const notFound = projects.filter((p) => p.verdict === 'not_found').length;
+  const suspicious = projects.filter((p) => p.verdict === 'suspicious' || p.verdict === 'mentioned_but_suspicious').length;
+  const avgScore = projects.length
+    ? Math.round(projects.reduce((s, p) => s + (p.legitimacy_score || 0), 0) / projects.length)
+    : 0;
+
+  let scoreColor = 'var(--emerald)';
+  let scoreLabel = 'Projects Look Legitimate';
+  if (avgScore < 40) { scoreColor = 'var(--rose)'; scoreLabel = 'Suspicious Activity'; }
+  else if (avgScore < 70) { scoreColor = 'var(--amber)'; scoreLabel = 'Needs Review'; }
+
+  const circ = 2 * Math.PI * 42;
+  summary.innerHTML = `
+    <div class="score-ring-wrapper">
+      <svg width="100" height="100" viewBox="0 0 100 100">
+        <circle class="score-ring-bg" cx="50" cy="50" r="42"/>
+        <circle class="score-ring-fill" cx="50" cy="50" r="42"
+          stroke="${scoreColor}" stroke-dasharray="${circ}" stroke-dashoffset="${circ - (avgScore / 100) * circ}"/>
+      </svg>
+      <div class="score-ring-num" style="color:${scoreColor}">${avgScore}%</div>
+    </div>
+    <div class="score-info">
+      <div class="score-title">${scoreLabel}</div>
+      <div class="score-desc">
+        <a href="${result.github_profile_url || '#'}" target="_blank" style="color:var(--primary);font-weight:600">
+          @${esc(result.github_username || 'unknown')}
+        </a>
+        · ${result.repos_found || 0} public repos found
+      </div>
+      <div class="score-breakdown">
+        <div class="breakdown-item"><span class="breakdown-dot" style="background:var(--emerald)"></span> ${verified} verified</div>
+        <div class="breakdown-item"><span class="breakdown-dot" style="background:var(--rose)"></span> ${notFound} not found</div>
+        <div class="breakdown-item"><span class="breakdown-dot" style="background:var(--amber)"></span> ${suspicious} suspicious</div>
+      </div>
+    </div>`;
+
+  const verdictIcons = {
+    verified: '✓', repo_legitimate: '✓', not_found: '✗',
+    suspicious: '⚑', mentioned_but_suspicious: '⚑',
+    uncertain: '?', no_data: '—', mentioned_only: '◎',
+  };
+  const verdictColors = {
+    verified: 'var(--emerald)', repo_legitimate: 'var(--emerald)',
+    not_found: 'var(--rose)', suspicious: 'var(--rose)',
+    mentioned_but_suspicious: 'var(--amber)', uncertain: 'var(--amber)',
+    no_data: 'var(--text-3)', mentioned_only: 'var(--blue)',
+  };
+
+  grid.innerHTML = '';
+  projects.forEach((p, i) => {
+    const v = p.verdict || 'unknown';
+    const card = document.createElement('div');
+    card.className = 'claim-card';
+    card.style.animationDelay = `${i * 0.06}s`;
+
+    const repoLink = p.repo_url
+      ? `<a href="${p.repo_url}" target="_blank" style="color:var(--primary);font-size:0.78rem;text-decoration:none">${esc(p.github_repo)}</a>`
+      : '<span style="color:var(--text-3);font-size:0.78rem">No matching repo</span>';
+
+    const flags = (p.legitimacy_flags || []).map((f) =>
+      `<div style="font-size:0.75rem;color:var(--text-3);padding:2px 0">• ${esc(f)}</div>`
+    ).join('');
+
+    card.innerHTML = `
+      <div class="claim-header">
+        <span class="claim-status-icon" style="color:${verdictColors[v] || 'var(--text-3)'}">${verdictIcons[v] || '?'}</span>
+        <span class="claim-status-label" style="color:${verdictColors[v] || 'var(--text-3)'}">${v.replace(/_/g, ' ')}</span>
+        <span class="claim-confidence">${p.legitimacy_score || 0}%</span>
+      </div>
+      <div class="claim-text" style="font-weight:700">${esc(p.project_name)}</div>
+      <div style="margin:6px 0">${repoLink}</div>
+      <div style="display:flex;gap:16px;font-size:0.78rem;color:var(--text-2);margin:4px 0;flex-wrap:wrap">
+        <span>📝 ${p.commit_count || 0} commits</span>
+        <span>📅 ${p.time_span_days || 0} days span</span>
+        ${p.mentioned_in_transcript ? '<span style="color:var(--emerald)">🎤 Mentioned in interview</span>' : '<span style="color:var(--text-3)">🎤 Not mentioned</span>'}
+        ${p.repo_is_fork ? '<span style="color:var(--amber)">🔀 Fork</span>' : ''}
+        ${p.repo_language ? `<span>💻 ${esc(p.repo_language)}</span>` : ''}
+      </div>
+      <div style="margin-top:6px">${flags}</div>`;
+    grid.appendChild(card);
+  });
+
+  $('#github-results').classList.remove('hidden');
 }
 
 /* ================================================================
@@ -1263,4 +1392,164 @@ async function fetchAndRenderSkillConfidence() {
       `;
     }
   }
+}
+
+/* ================================================================
+   POST-INTERVIEW REPORT
+   ================================================================ */
+
+function initReport() {
+  const btn = $('#btn-generate-report');
+  if (btn) btn.addEventListener('click', handleGenerateReport);
+}
+
+async function handleGenerateReport() {
+  const btn = $('#btn-generate-report');
+  btn.disabled = true;
+
+  $('#report-empty').classList.add('hidden');
+  $('#report-content').classList.add('hidden');
+  $('#report-loading').classList.remove('hidden');
+
+  try {
+    const result = await postInterviewAnalysis(state.resumeProfile);
+
+    if (result.error) throw new Error(result.error);
+    if (!result.report) throw new Error('No report generated');
+
+    renderReport(result.report, result);
+    showToast('Post-interview report generated!', 'success');
+  } catch (err) {
+    showToast(`Report failed: ${err.message}`, 'error');
+    $('#report-empty').classList.remove('hidden');
+  } finally {
+    $('#report-loading').classList.add('hidden');
+    btn.disabled = false;
+  }
+}
+
+function renderReport(report, meta) {
+  // Score Hero
+  const score = report.overall_score || 0;
+  const verdict = report.verdict || 'Analysis Complete';
+  let color = 'var(--emerald)';
+  if (score < 40) color = 'var(--rose)';
+  else if (score < 70) color = 'var(--amber)';
+
+  const circ = 2 * Math.PI * 42;
+  const offset = circ - (score / 100) * circ;
+
+  const recColors = {
+    'Strong Hire': 'var(--emerald)', 'Hire': 'var(--emerald)',
+    'Lean Hire': 'var(--amber)', 'Lean No Hire': 'var(--amber)',
+    'No Hire': 'var(--rose)', 'Strong No Hire': 'var(--rose)',
+  };
+  const recColor = recColors[report.hiring_recommendation] || 'var(--text-2)';
+
+  $('#report-hero').innerHTML = `
+    <div class="score-hero" style="margin-bottom:0">
+      <div class="score-ring-wrapper">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle class="score-ring-bg" cx="50" cy="50" r="42"/>
+          <circle class="score-ring-fill" cx="50" cy="50" r="42"
+            stroke="${color}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="score-ring-num" style="color:${color}">${score}</div>
+      </div>
+      <div class="score-info">
+        <div class="score-title" style="color:${color}">${esc(verdict)}</div>
+        <div class="score-desc">${meta.message_count || 0} messages analyzed · Session ${esc((meta.session_id || '').substring(0, 8))}</div>
+        <div style="margin-top:10px">
+          <span style="display:inline-block;padding:4px 14px;border-radius:var(--r-full);font-size:0.78rem;font-weight:700;background:${recColor}22;color:${recColor};border:1px solid ${recColor}44">
+            ${esc(report.hiring_recommendation || 'Pending')}
+          </span>
+        </div>
+      </div>
+    </div>`;
+
+  // Summary
+  $('#report-summary').innerHTML = `<p style="font-size:0.92rem;color:var(--text-2);line-height:1.7">${esc(report.summary || '')}</p>`;
+
+  // Strengths & Weaknesses
+  const strengths = report.strengths || [];
+  const weaknesses = report.weaknesses || [];
+  $('#report-sw').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px">
+      <div class="card">
+        <div class="card-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><h3 style="color:var(--emerald)">Strengths</h3></div>
+        <div class="card-body">
+          ${strengths.map(s => `<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85rem;color:var(--text-2)"><span style="color:var(--emerald);font-weight:800;flex-shrink:0">▲</span>${esc(s)}</div>`).join('')}
+          ${!strengths.length ? '<p class="text-muted text-sm">None identified</p>' : ''}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><h3 style="color:var(--rose)">Weaknesses</h3></div>
+        <div class="card-body">
+          ${weaknesses.map(w => `<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85rem;color:var(--text-2)"><span style="color:var(--rose);font-weight:800;flex-shrink:0">▼</span>${esc(w)}</div>`).join('')}
+          ${!weaknesses.length ? '<p class="text-muted text-sm">None identified</p>' : ''}
+        </div>
+      </div>
+    </div>`;
+
+  // Skill Assessments
+  const skills = report.skill_assessments || [];
+  $('#report-skills').innerHTML = skills.map(s => {
+    const sc = s.score || 0;
+    let barColor = 'var(--emerald)';
+    if (sc < 40) barColor = 'var(--rose)';
+    else if (sc < 70) barColor = 'var(--amber)';
+    return `
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <span style="min-width:120px;font-size:0.82rem;font-weight:600;color:var(--text-1)">${esc(s.skill)}</span>
+        <div style="flex:1;height:8px;border-radius:var(--r-full);background:var(--bg-3);overflow:hidden">
+          <div style="height:100%;width:${sc}%;background:${barColor};border-radius:var(--r-full);transition:width 1s ease"></div>
+        </div>
+        <span style="font-size:0.75rem;font-weight:700;color:${barColor};font-family:var(--mono);min-width:35px;text-align:right">${sc}%</span>
+      </div>
+      <div style="font-size:0.78rem;color:var(--text-3);padding:4px 0 8px 134px;line-height:1.5">${esc(s.evidence || '')}</div>`;
+  }).join('');
+
+  // Consistency Notes
+  const notes = report.consistency_notes || [];
+  const statusIcons = { verified: '✓', inconsistent: '✗', unverified: '?' };
+  const statusColors = { verified: 'var(--emerald)', inconsistent: 'var(--rose)', unverified: 'var(--amber)' };
+  $('#report-consistency').innerHTML = notes.map(n => {
+    const st = n.status || 'unverified';
+    const ic = statusIcons[st] || '?';
+    const cl = statusColors[st] || 'var(--text-3)';
+    return `
+      <div style="padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;background:${cl}18;color:${cl}">${ic}</span>
+          <span style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:${cl}">${esc(st)}</span>
+        </div>
+        <div style="font-size:0.85rem;color:var(--text-1);margin-bottom:4px"><strong>Resume:</strong> ${esc(n.claim || '')}</div>
+        <div style="font-size:0.82rem;color:var(--text-3);padding-left:12px;border-left:2px solid var(--border)"><strong>Interview:</strong> ${esc(n.interview_evidence || '')}</div>
+      </div>`;
+  }).join('');
+
+  // Hiring Recommendation
+  $('#report-recommendation').innerHTML = `
+    <div class="card" style="border-left:4px solid ${recColor}">
+      <div class="card-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${recColor}" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M4 22H2V11h2"/></svg>
+        <h3>Hiring Recommendation</h3>
+        <span style="margin-left:auto;padding:4px 14px;border-radius:var(--r-full);font-size:0.78rem;font-weight:700;background:${recColor}18;color:${recColor}">${esc(report.hiring_recommendation || 'Pending')}</span>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.9rem;color:var(--text-2);line-height:1.7">${esc(report.recommendation_reasoning || '')}</p>
+      </div>
+    </div>`;
+
+  // Next Steps
+  const steps = report.suggested_next_steps || [];
+  $('#report-nextsteps').innerHTML = steps.map((s, i) =>
+    `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem;color:var(--text-2)">
+      <span style="color:var(--primary);font-weight:800;font-family:var(--mono);font-size:0.72rem;flex-shrink:0">${String(i + 1).padStart(2, '0')}</span>
+      ${esc(s)}
+    </div>`
+  ).join('');
+
+  // Show report
+  $('#report-content').classList.remove('hidden');
 }

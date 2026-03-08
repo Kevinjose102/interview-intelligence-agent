@@ -264,6 +264,22 @@
         </svg>
         <span>Consistency Check</span>
       </button>
+      <button class="nav-item" data-panel="github" id="nav-github">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        <span>GitHub Verify</span>
+      </button>
+
+      <div class="nav-section-label">Reports</div>
+      <button class="nav-item" data-panel="report" id="nav-report">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+        <span>Post-Interview Report</span>
+      </button>
 
       <div class="nav-section-label">System</div>
       <button class="nav-item" data-panel="history" id="nav-history">
@@ -825,6 +841,39 @@
         </div>
       </div>
 
+      <!-- ===== GITHUB VERIFICATION VIEW ===== -->
+      <div class="view" id="view-github">
+        <div class="view-header">
+          <div>
+            <h1>GitHub Verification</h1>
+            <p class="view-subtitle">Verify candidate projects by checking GitHub repos, commit history, and work legitimacy</p>
+          </div>
+          <button class="btn btn-gradient" id="btn-verify-github" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Verify Projects
+          </button>
+        </div>
+
+        <div id="github-empty" class="empty-hero">
+          <div class="empty-hero-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </div>
+          <h2>No Verification Yet</h2>
+          <p>Upload a resume with a GitHub link, then click <strong>Verify Projects</strong> to check repo ownership and commit legitimacy</p>
+        </div>
+
+        <div id="github-loading" class="loading-hero hidden">
+          <div class="loading-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
+          <h3>Verifying GitHub Projects</h3>
+          <p class="text-muted">Fetching repos, analyzing commit history…</p>
+        </div>
+
+        <div id="github-results" class="hidden">
+          <div id="github-summary" class="score-hero"></div>
+          <div id="github-projects-grid" class="claims-grid"></div>
+        </div>
+      </div>
+
       <!-- ===== HISTORY VIEW ===== -->
       <div class="view" id="view-history">
         <div class="view-header">
@@ -983,6 +1032,83 @@
                 <kbd class="kbd">Ctrl + 4</kbd>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== POST-INTERVIEW REPORT VIEW ===== -->
+      <div class="view" id="view-report">
+        <div class="view-header">
+          <div>
+            <h1>Post-Interview Report</h1>
+            <p class="view-subtitle">Comprehensive AI-powered analysis of the interview using conversation history and resume</p>
+          </div>
+          <button class="btn btn-gradient" id="btn-generate-report">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            Generate Report
+          </button>
+        </div>
+
+        <div id="report-empty" class="empty-hero">
+          <div class="empty-hero-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+          <h2>No Report Generated Yet</h2>
+          <p>Complete an interview session, then click <strong>Generate Report</strong> to create a comprehensive post-interview analysis</p>
+        </div>
+
+        <div id="report-loading" class="loading-hero hidden">
+          <div class="loading-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
+          <h3>Generating Post-Interview Report</h3>
+          <p class="text-muted">Analyzing full transcript and resume with AI… This may take a moment.</p>
+        </div>
+
+        <div id="report-content" class="hidden">
+          <!-- Score Hero -->
+          <div class="report-hero" id="report-hero"></div>
+          <!-- Summary -->
+          <div class="card" id="report-summary-card" style="margin-bottom:16px">
+            <div class="card-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <h3>Interview Summary</h3>
+            </div>
+            <div class="card-body" id="report-summary"></div>
+          </div>
+          <!-- Strengths & Weaknesses -->
+          <div class="report-sw-grid" id="report-sw"></div>
+          <!-- Skill Assessments -->
+          <div class="card" id="report-skills-card" style="margin-top:16px">
+            <div class="card-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <h3>Skill Assessments</h3>
+            </div>
+            <div class="card-body" id="report-skills"></div>
+          </div>
+          <!-- Consistency Notes -->
+          <div class="card" id="report-consistency-card" style="margin-top:16px">
+            <div class="card-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <h3>Resume vs Interview Consistency</h3>
+            </div>
+            <div class="card-body" id="report-consistency"></div>
+          </div>
+          <!-- Hiring Recommendation -->
+          <div class="report-recommendation" id="report-recommendation" style="margin-top:16px"></div>
+          <!-- Next Steps -->
+          <div class="card" id="report-nextsteps-card" style="margin-top:16px">
+            <div class="card-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              <h3>Suggested Next Steps</h3>
+            </div>
+            <div class="card-body" id="report-nextsteps"></div>
           </div>
         </div>
       </div>

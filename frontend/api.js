@@ -54,6 +54,15 @@ export async function getConversation(sessionId) {
   return res.json();
 }
 
+export async function verifyGitHub(profile, transcript = '') {
+  const res = await fetch(`${BASE}/verify/github`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ profile, transcript, github_username: profile?.github_username }),
+  });
+  return res.json();
+}
+
 export async function analyzeLatest() {
   const res = await fetch(`${BASE}/analyze_latest`);
   return res.json();
@@ -74,6 +83,15 @@ export async function generateResumeSummary(profile, deepAnalysis, transcript) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ profile, deep_analysis: deepAnalysis, transcript }),
+  });
+  return res.json();
+}
+
+export async function postInterviewAnalysis(resumeProfile) {
+  const res = await fetch(`${BASE}/post_interview_analysis`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ resume_profile: resumeProfile || null }),
   });
   return res.json();
 }

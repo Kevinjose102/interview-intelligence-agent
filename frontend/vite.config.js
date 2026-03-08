@@ -14,6 +14,8 @@ export default defineConfig({
       '/analyze_latest': 'http://localhost:8000',
       '/ai_analysis': 'http://localhost:8000',
       '/analysis_results': 'http://localhost:8000',
+      '/post_interview_analysis': 'http://localhost:8000',
+      '/verify': 'http://localhost:8000',
       '/audio_stream': {
         target: 'ws://localhost:8000',
         ws: true,

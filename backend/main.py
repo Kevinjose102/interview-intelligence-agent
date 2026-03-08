@@ -406,8 +406,16 @@ async def upload_resume(file: UploadFile = File(...)):
         # Run pipeline (sync — runs in thread to avoid blocking)
         from resume_intelligence.pipeline import process_resume
         from resume_intelligence.resume_analyzer import analyze_resume
+        from resume_intelligence.resume_parser import extract_links
+        from resume_intelligence.github_verifier import extract_github_username
         profile, raw_text = await asyncio.to_thread(process_resume, tmp_path)
         profile_dict = profile.model_dump() if hasattr(profile, "model_dump") else profile.dict()
+
+        # Extract GitHub URL from resume
+        links = extract_links(tmp_path)
+        github_username = extract_github_username(links)
+        profile_dict["github_username"] = github_username
+        profile_dict["github_links"] = [l for l in links if "github.com" in l]
 
         # Run deep analysis (async — uses Groq)
         deep_analysis = await analyze_resume(raw_text, profile_dict)
@@ -668,3 +676,151 @@ No other text."""
         print(f"[analyze/consistency] Error: {e}")
         return {"error": str(e), "analysis": []}
 
+
+# ------------------------------------------------------------------ #
+# Post-Interview Analysis
+# ------------------------------------------------------------------ #
+
+@app.post("/post_interview_analysis")
+async def post_interview_analysis(payload: dict = {}):
+    """
+    Generate a comprehensive post-interview analysis report.
+    Uses the full conversation transcript and optionally the uploaded resume profile.
+    """
+    resume_profile = payload.get("resume_profile", None)
+
+    # Get the latest conversation
+    conversations = conversation_manager.list_conversations()
+    if not conversations:
+        return {"error": "No conversations found"}
+
+    latest = conversations[-1]
+    conv = conversation_manager.get_conversation(latest.session_id)
+    if conv is None or not conv.messages:
+        return {"error": "Conversation has no messages"}
+
+    # Build full transcript
+    transcript_lines = []
+    for msg in conv.messages:
+        transcript_lines.append(f"{msg.speaker.upper()}: {msg.text}")
+    transcript_text = "\n".join(transcript_lines)
+
+    # Format resume
+    resume_text = "Not provided"
+    if resume_profile:
+        resume_text = json.dumps(resume_profile, indent=2) if isinstance(resume_profile, dict) else str(resume_profile)
+
+    api_key = os.getenv("GROQ_API_KEY", "")
+    if not api_key or api_key == "your-groq-api-key-here":
+        return {"error": "GROQ_API_KEY not configured"}
+
+    try:
+        from groq import Groq
+        client = Groq(api_key=api_key)
+
+        prompt = f"""You are a senior hiring manager and interview analyst. Generate a comprehensive POST-INTERVIEW ANALYSIS REPORT based on the complete interview transcript and candidate resume.
+
+CANDIDATE RESUME PROFILE:
+{resume_text}
+
+FULL INTERVIEW TRANSCRIPT:
+{transcript_text}
+
+---
+
+Generate a thorough analysis and return ONLY a JSON object with this EXACT structure:
+{{
+  "overall_score": <0-100 integer>,
+  "verdict": "<one-line verdict e.g. 'Strong Technical Candidate with Leadership Potential'>",
+  "summary": "<3-5 sentence interview summary covering key discussion points and candidate performance>",
+  "strengths": ["strength 1", "strength 2", "strength 3"],
+  "weaknesses": ["weakness 1", "weakness 2"],
+  "skill_assessments": [
+    {{"skill": "skill name", "score": <0-100>, "evidence": "brief evidence from interview"}}
+  ],
+  "consistency_notes": [
+    {{"claim": "what resume says", "interview_evidence": "what candidate said", "status": "verified|inconsistent|unverified"}}
+  ],
+  "hiring_recommendation": "Strong Hire|Hire|Lean Hire|Lean No Hire|No Hire|Strong No Hire",
+  "recommendation_reasoning": "<2-3 sentences explaining the hiring recommendation>",
+  "suggested_next_steps": ["next step 1", "next step 2"]
+}}
+
+Rules:
+- Be specific — cite actual statements from the transcript as evidence
+- skill_assessments should cover 4-8 key skills discussed
+- consistency_notes should compare resume claims vs actual interview answers
+- overall_score: 85+ = exceptional, 70-84 = strong, 55-69 = moderate, below 55 = weak
+- Be honest and fair in the assessment
+
+Return ONLY valid JSON, no markdown, no explanation."""
+
+        response = await asyncio.to_thread(
+            lambda: client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": "You are a senior hiring manager producing a post-interview analysis report. Always respond with valid JSON only."},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.3,
+                max_tokens=2000,
+            )
+        )
+
+        import re
+        raw = response.choices[0].message.content.strip()
+        print(f"[post_interview] Raw response: {raw[:200]}...")
+
+        # Parse JSON (handle markdown code blocks)
+        json_text = raw
+        if "```" in json_text:
+            match = re.search(r"```(?:json)?\s*(.*?)```", json_text, re.DOTALL)
+            if match:
+                json_text = match.group(1).strip()
+
+        report = json.loads(json_text)
+
+        return {
+            "status": "ok",
+            "session_id": conv.session_id,
+            "message_count": len(conv.messages),
+            "duration": conv.duration,
+            "report": report,
+        }
+    except json.JSONDecodeError as e:
+        print(f"[post_interview] JSON parse error: {e}")
+        return {"error": f"Failed to parse AI response: {e}"}
+    except Exception as e:
+        print(f"[post_interview] Error: {e}")
+        return {"error": str(e)}
+
+
+# ------------------------------------------------------------------ #
+# GitHub Project Verification
+# ------------------------------------------------------------------ #
+
+@app.post("/verify/github")
+async def verify_github(payload: dict):
+    """
+    Verify candidate projects by checking their GitHub repos and commit history.
+    Accepts: {profile, transcript, github_username}
+    Returns per-project verification with legitimacy scores.
+    """
+    profile = payload.get("profile", {})
+    transcript = payload.get("transcript", "")
+    github_username = payload.get("github_username") or profile.get("github_username")
+
+    if not github_username:
+        return {"error": "No GitHub username found. Upload a resume with a GitHub link first.", "projects": []}
+
+    projects = profile.get("projects", [])
+    if not projects:
+        return {"error": "No projects found in resume profile", "projects": []}
+
+    try:
+        from resume_intelligence.github_verifier import verify_projects
+        result = await verify_projects(projects, github_username, transcript)
+        return {"status": "ok", **result}
+    except Exception as e:
+        print(f"[verify/github] Error: {e}")
+        return {"error": str(e), "projects": []}
