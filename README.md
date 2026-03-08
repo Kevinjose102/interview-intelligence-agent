@@ -109,12 +109,12 @@ npm run dev
 ## 👥 Contributors
 
 A huge thank you to the brilliant minds who built this project:
+* **[Alen Saji](https://github.com/alensaji2005)**
+* **[athul30](https://github.com/athul30)**
+* **[Jovel-J](https://github.com/Jovel-J)**
+* **[juanmoncy011](https://github.com/juanmoncy011)**
+* **[Kevinjose102](https://github.com/Kevinjose102)**
 
-* **Alen Saji**
-* **athul30**
-* **Jovel-J**
-* **juanmoncy011**
-* **Kevinjose102**
 
 ---
 *Created during hackathons & late-night coding sessions. Built to make technical interviewing smarter, fairer, and highly automated.*
