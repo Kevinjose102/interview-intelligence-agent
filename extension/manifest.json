@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Capture Google Meet audio for real-time transcription via Deepgram",
   "permissions": ["tabCapture", "activeTab", "scripting", "offscreen"],
-  "host_permissions": ["https://meet.google.com/*"],
+  "host_permissions": ["https://meet.google.com/*", "http://localhost:8000/*"],
   "background": {
     "service_worker": "background.js"
   },
@@ -12,6 +12,13 @@
     "default_popup": "popup.html",
     "default_title": "Interview Intelligence"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

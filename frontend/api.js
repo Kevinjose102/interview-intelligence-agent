@@ -59,6 +59,15 @@ export async function analyzeLatest() {
   return res.json();
 }
 
+export async function postInterviewAnalysis(resumeProfile) {
+  const res = await fetch(`${BASE}/post_interview_analysis`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ resume_profile: resumeProfile || null }),
+  });
+  return res.json();
+}
+
 export function subscribeSSE(onMessage) {
   const source = new EventSource(`${BASE}/conversations/stream`);
   source.onmessage = (event) => {
