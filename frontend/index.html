@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>InterviewIQ — AI-Powered Interview Intelligence Platform</title>
+  <title>HireLens — AI-Powered Interview Intelligence Platform</title>
   <meta name="description"
     content="Enterprise-grade interview analysis platform with real-time transcription, AI resume parsing, intelligent follow-up questions, and candidate credibility scoring." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,11 +22,26 @@
     <!-- Nav -->
     <nav class="landing-nav">
       <div class="landing-logo">
-        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-          <circle cx="16" cy="16" r="14" stroke="#00D4AA" stroke-width="2" />
-          <path d="M12 16l4-6 4 6-4 6z" fill="#00D4AA" />
+        <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+          <!-- Outer dashed ring with dots -->
+          <circle cx="50" cy="50" r="42" stroke="rgba(0, 212, 170, 0.4)" stroke-width="2" stroke-dasharray="14 10" />
+          <circle cx="50" cy="8" r="4" fill="#00D4AA" />
+          <circle cx="50" cy="92" r="4" fill="#00D4AA" />
+          <circle cx="8" cy="50" r="4" fill="#00D4AA" />
+          <circle cx="92" cy="50" r="4" fill="#00D4AA" />
+          
+          <!-- Mid thick bright ring -->
+          <circle cx="50" cy="50" r="30" stroke="#00D4AA" stroke-width="8" style="filter: drop-shadow(0 0 4px rgba(0, 212, 170, 0.6))" />
+          
+          <!-- Inner solid ring -->
+          <circle cx="50" cy="50" r="18" stroke="rgba(0, 212, 170, 0.3)" stroke-width="3" />
+          
+          <!-- Center glow dot -->
+          <circle cx="50" cy="50" r="8" fill="#00D4AA" style="filter: drop-shadow(0 0 6px #00D4AA)" />
         </svg>
-        <span class="landing-logo-text">InterviewIQ</span>
+        <span class="landing-logo-text" style="font-weight: 700; font-size: 1.5rem; letter-spacing: -0.5px;">
+          <span style="color: white;">Hire</span><span style="color: #00D4AA;">Lens</span>
+        </span>
       </div>
       <div class="landing-nav-links">
         <a href="#features">Features</a>
@@ -42,10 +57,13 @@
       <div class="hero-arc"></div>
       <div class="hero-content">
         <div class="hero-badge">AI-POWERED INTERVIEW INTELLIGENCE</div>
-        <h1 class="hero-title">
+        <h1 class="hero-logo-title" style="font-size: 7.5rem; font-weight: 900; letter-spacing: -3px; margin-bottom: 1.5rem; text-align: center; color: white;">
+          Hire<span class="hero-gradient-text">Lens</span>
+        </h1>
+        <h2 class="hero-title" style="font-size: 2.5rem;">
           Decode every interview.<br />
           <span class="hero-gradient-text">Remain unbiased.</span>
-        </h1>
+        </h2>
         <p class="hero-subtitle">
           Real-time transcription, AI-driven resume analysis, intelligent follow-up questions,
           and candidate credibility scoring — all in one platform.
@@ -184,7 +202,7 @@
     </section>
 
     <footer class="landing-footer">
-      <span>InterviewIQ v1.0.0</span>
+      <span>HireLens v1.0.0</span>
       <span>·</span>
       <a href="https://github.com/Kevinjose102/interview-intelligence-agent" target="_blank">GitHub</a>
     </footer>
@@ -195,20 +213,28 @@
     <div class="sidebar-top">
       <div class="logo">
         <div class="logo-mark">
-          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-            <rect width="32" height="32" rx="8" fill="url(#logo-grad)" />
-            <path d="M10 16.5L14.5 21L22 11" stroke="white" stroke-width="2.5" stroke-linecap="round"
-              stroke-linejoin="round" />
-            <defs>
-              <linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32">
-                <stop stop-color="#6366f1" />
-                <stop offset="1" stop-color="#3b82f6" />
-              </linearGradient>
-            </defs>
+          <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+            <!-- Outer dashed ring with dots -->
+            <circle cx="50" cy="50" r="42" stroke="rgba(0, 212, 170, 0.4)" stroke-width="2" stroke-dasharray="14 10" />
+            <circle cx="50" cy="8" r="4" fill="#00D4AA" />
+            <circle cx="50" cy="92" r="4" fill="#00D4AA" />
+            <circle cx="8" cy="50" r="4" fill="#00D4AA" />
+            <circle cx="92" cy="50" r="4" fill="#00D4AA" />
+            
+            <!-- Mid thick bright ring -->
+            <circle cx="50" cy="50" r="30" stroke="#00D4AA" stroke-width="8" style="filter: drop-shadow(0 0 4px rgba(0, 212, 170, 0.6))" />
+            
+            <!-- Inner solid ring -->
+            <circle cx="50" cy="50" r="18" stroke="rgba(0, 212, 170, 0.3)" stroke-width="3" />
+            
+            <!-- Center glow dot -->
+            <circle cx="50" cy="50" r="8" fill="#00D4AA" style="filter: drop-shadow(0 0 6px #00D4AA)" />
           </svg>
         </div>
         <div class="logo-text">
-          <span class="logo-name">InterviewIQ</span>
+          <span class="logo-name" style="background: none; -webkit-text-fill-color: initial; overflow: visible; font-size: 1.5rem; letter-spacing: -0.5px;">
+            <span style="color: white; font-weight: 700;">Hire</span><span style="color: #00D4AA; font-weight: 700;">Lens</span>
+          </span>
           <span class="logo-sub">Intelligence Platform</span>
         </div>
       </div>
@@ -888,7 +914,7 @@
         <div class="view-header">
           <div>
             <h1>Settings</h1>
-            <p class="view-subtitle">Configure your InterviewIQ platform preferences</p>
+            <p class="view-subtitle">Configure your HireLens platform preferences</p>
           </div>
         </div>
 
@@ -968,7 +994,7 @@
             <div class="settings-card">
               <div class="setting-row">
                 <div class="setting-info">
-                  <span class="setting-label">InterviewIQ</span>
+                  <span class="setting-label">HireLens</span>
                   <span class="setting-desc">AI-Powered Interview Intelligence Platform</span>
                 </div>
                 <span class="status-pill">v1.0.0</span>

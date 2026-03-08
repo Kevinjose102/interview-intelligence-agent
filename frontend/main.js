@@ -1,5 +1,5 @@
 /**
- * main.js — InterviewIQ Dashboard (Industry-Level)
+ * main.js — HireLens Dashboard
  */
 
 import {
@@ -499,7 +499,7 @@ function exportTranscript() {
   const lines = state.transcriptMessages.map((m) =>
     `[${fmtTime(m.timestamp)}] ${m.speaker.toUpperCase()}: ${m.text}`
   );
-  const header = `InterviewIQ — Transcript Export\nSession: ${state.currentSessionId || 'unknown'}\nDate: ${new Date().toLocaleString()}\n${'='.repeat(60)}\n\n`;
+  const header = `HireLens — Transcript Export\nSession: ${state.currentSessionId || 'unknown'}\nDate: ${new Date().toLocaleString()}\n${'='.repeat(60)}\n\n`;
   downloadFile(header + lines.join('\n'), `transcript_${Date.now()}.txt`, 'text/plain');
   showToast('Transcript exported', 'success');
 }
@@ -507,7 +507,7 @@ function exportTranscript() {
 function exportReport() {
   if (!state.consistencyData) return;
   const r = state.consistencyData;
-  let report = `InterviewIQ — Consistency Analysis Report\nDate: ${new Date().toLocaleString()}\n${'='.repeat(60)}\n\n`;
+  let report = `HireLens — Consistency Analysis Report\nDate: ${new Date().toLocaleString()}\n${'='.repeat(60)}\n\n`;
   report += `OVERALL CREDIBILITY SCORE: ${r.overall_score || 0}%\n`;
   report += `Total Claims Analyzed: ${r.total_claims || 0}\n\n`;
   report += `${'─'.repeat(60)}\nDETAILED CLAIMS\n${'─'.repeat(60)}\n\n`;

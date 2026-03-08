@@ -11,6 +11,7 @@ import httpx
 from difflib import SequenceMatcher
 from datetime import datetime, timezone
 from dotenv import load_dotenv
+from typing import Optional
 
 load_dotenv()
 
@@ -24,7 +25,7 @@ def _github_headers() -> dict:
     return headers
 
 
-def extract_github_username(links: list[str]) -> str | None:
+def extract_github_username(links: list[str]) -> Optional[str]:
     """Extract GitHub username from a list of URLs."""
     for link in links:
         # Match github.com/<username> (but not github.com/orgs, settings, etc.)
@@ -469,7 +470,7 @@ async def match_project_to_repo(
     repos: list[dict],
     github_username: str,
     threshold: float = 0.2,
-) -> dict | None:
+) -> Optional[dict]:
     """
     Find the best matching GitHub repo for a resume project.
     Uses multi-signal matching: name, description, keywords, techs, and README.
