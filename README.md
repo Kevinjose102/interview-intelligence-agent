@@ -16,28 +16,6 @@ The **Interview Intelligence Agent** is an advanced, real-time technical intervi
 
 ---
 
-## 🏗️ Project Architecture
-
-The system is separated into three main components:
-
-### 1. Backend (`backend/`)
-A Python **FastAPI** application acting as the core intelligence engine.
-* **`main.py`**: Entrypoint containing REST and WebSocket endpoints.
-* **`audio_router.py`**: Manages the WebSockets bridging the Chrome Extension audio to Deepgram.
-* **`conversation_manager.py`**: Maintains conversation state and real-time messaging context.
-* **`llm_reasoning_engine.py`**: Handles AI intelligence workflows via the Groq API.
-* **`resume_intelligence/`**: Submodule handling PDF parsing, keyword extraction, and the `github_verifier.py` tool.
-
-### 2. Frontend (`frontend/`)
-A fast, **Vite-based Vanilla JavaScript** web dashboard.
-* Connects to the backend via Server-Sent Events (SSE) to display real-time metrics, transcripts, candidate profiles, and dynamic UI elements without page refreshes.
-
-### 3. Chrome Extension (`extension/`)
-A browser extension designed specifically for Google Meet.
-* Uses Manifest V3 and offscreen documents to securely capture tab audio and stream it over WebSockets to the Python backend.
-
----
-
 ## Prerequisites
 
 * **Python 3.11+** installed
