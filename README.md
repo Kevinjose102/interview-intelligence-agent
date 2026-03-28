@@ -88,6 +88,7 @@ npm run dev
 
 A huge thank you to the brilliant minds who built this project:
 * **[Alen Saji](https://github.com/alensaji2005)**
+* **[alleniissac](https://github.com/alleniissac)**
 * **[athul30](https://github.com/athul30)**
 * **[Jovel-J](https://github.com/Jovel-J)**
 * **[juanmoncy011](https://github.com/juanmoncy011)**
