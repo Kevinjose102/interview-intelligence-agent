@@ -6,13 +6,13 @@ The **Interview Intelligence Agent** is an advanced, real-time technical intervi
 
 ##  Key Features
 
-* ** Real-Time Transcription:** Seamlessly captures Google Meet audio via a custom Chrome Extension and transcribes it instantly using Deepgram via WebSockets.
-* ** LLM Reasoning Engine:** Continuously analyzes the conversation using Llama 3 (via Groq) to evaluate candidate answers, score technical depth, and identify red flags.
-* ** Resume Intelligence:** Upload a candidate's PDF resume to automatically extract skills, experience, and project links.
-* ** Consistency Analysis:** Cross-references the candidate's spoken answers during the interview against their resume claims in real-time to detect inconsistencies or confirm verified claims.
-* ** Dynamic Follow-Up Questions:** Generates highly specific, probing follow-up questions during the interview based on the candidate's resume and the live transcript context.
-* ** GitHub Project Verification:** Automatically extracts GitHub links from the resume, finds candidate repositories, and deeply analyzes commit histories (volume, frequency, commit messages, and text content) to generate a "legitimacy score" for their projects.
-* ** Post-Interview Report:** Generates a comprehensive summary report immediately after the interview, including overall scores, skill assessments, strengths/weaknesses, and a final hiring recommendation.
+* ** Real-Time Transcription: ** Seamlessly captures Google Meet audio via a custom Chrome Extension and transcribes it instantly using Deepgram via WebSockets.
+* ** LLM Reasoning Engine: ** Continuously analyzes the conversation using Llama 3 (via Groq) to evaluate candidate answers, score technical depth, and identify red flags.
+* ** Resume Intelligence: ** Upload a candidate's PDF resume to automatically extract skills, experience, and project links.
+* ** Consistency Analysis: ** Cross-references the candidate's spoken answers during the interview against their resume claims in real-time to detect inconsistencies or confirm verified claims.
+* ** Dynamic Follow-Up Questions: ** Generates highly specific, probing follow-up questions during the interview based on the candidate's resume and the live transcript context.
+* ** GitHub Project Verification: ** Automatically extracts GitHub links from the resume, finds candidate repositories, and deeply analyzes commit histories (volume, frequency, commit messages, and text content) to generate a "legitimacy score" for their projects.
+* ** Post-Interview Report: ** Generates a comprehensive summary report immediately after the interview, including overall scores, skill assessments, strengths/weaknesses, and a final hiring recommendation.
 
 ---
 
